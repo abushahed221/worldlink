@@ -1,0 +1,23 @@
+{% extends "posts/settings/_base.html" %}
+{% load i18n %}
+{% block settings_content %}
+
+<div class="card">
+    <h3 style="margin-top:0; font-size:17px;">🎨 {% trans "المظهر" %}</h3>
+    <p class="muted" style="font-size:13px; margin-bottom:14px;">{% trans "اختر المظهر الافتراضي. يمكنك تغييره من الزر 🌙 في الأعلى." %}</p>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div style="margin-bottom:12px;">
+            <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">{{ field.label }}</label>
+            {{ field }}
+        </div>
+        {% endfor %}
+        <div style="display:flex; gap:8px; margin-top:16px;">
+            <button type="submit" class="btn">💾 {% trans "حفظ" %}</button>
+            <a href="{% url 'settings_index' %}" class="btn btn-secondary">{% trans "إلغاء" %}</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

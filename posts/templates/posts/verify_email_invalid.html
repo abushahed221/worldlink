@@ -1,0 +1,9 @@
+{% extends "posts/base.html" %}
+{% block title %}رابط غير صالح | WorldLink{% endblock %}
+{% block content %}
+<div class="card" style="text-align:center;">
+    <h2>❌ رابط غير صالح</h2>
+    <p>رابط التفعيل غير صحيح أو منتهي الصلاحية.</p>
+    <a href="{% url 'signup' %}" class="btn">حاول مرة أخرى</a>
+</div>
+{% endblock %}

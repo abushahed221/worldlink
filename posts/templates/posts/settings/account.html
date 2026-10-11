@@ -1,0 +1,49 @@
+{% extends "posts/settings/_base.html" %}
+{% load i18n %}
+{% block settings_content %}
+
+<div class="card">
+    <h3 style="margin-top:0; font-size:17px;">📧 {% trans "البريد والهاتف" %}</h3>
+    <form method="post">
+        {% csrf_token %}
+        <div style="display:grid; gap:12px;">
+            {% for field in account_form %}
+            <div>
+                <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<div style="color:var(--danger); font-size:13px; margin-top:4px;">{{ field.errors.0 }}</div>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <button type="submit" name="save_account" value="1" class="btn" style="margin-top:16px;">💾 {% trans "حفظ" %}</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3 style="margin-top:0; font-size:17px;">🔑 {% trans "تغيير كلمة المرور" %}</h3>
+    <form method="post">
+        {% csrf_token %}
+        <div style="display:grid; gap:12px;">
+            {% for field in password_form %}
+            <div>
+                <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<div style="color:var(--danger); font-size:13px; margin-top:4px;">{{ field.errors.0 }}</div>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <button type="submit" name="change_password" value="1" class="btn" style="margin-top:16px;">🔄 {% trans "تغيير كلمة المرور" %}</button>
+    </form>
+</div>
+<div class="card">
+    <h3 style="margin-top:0; font-size:17px;">⬇️ {% trans "تصدير بياناتي" %}</h3>
+    <p class="muted" style="font-size:13px;">{% trans "احصل على نسخة كاملة من كل بياناتك في ملف JSON." %}</p>
+    <a href="{% url 'data_export_preview' %}" class="btn btn-secondary" style="margin-top:10px;">📦 {% trans "فتح صفحة التصدير" %}</a>
+</div>
+<div class="card" style="border:1px solid var(--danger);">
+    <h3 style="margin-top:0; font-size:17px; color:var(--danger);">🗑️ {% trans "حذف الحساب" %}</h3>
+    <p class="muted" style="font-size:13px;">{% trans "حذف نهائي. لا يمكن التراجع." %}</p>
+    <a href="{% url 'settings_delete_account' %}" class="btn btn-danger" style="margin-top:10px;">{% trans "حذف حسابي" %}</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "posts/base.html" %}
+{% block title %}الحظر والكتم | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <h2>🚫 المستخدمون المحظورون</h2>
+    {% for b in blocks %}
+        <div class="user-row">
+            <a href="{% url 'profile' b.blocked.username %}" style="font-weight:bold; color:#1c1e21; text-decoration:none;">
+                {{ b.blocked.username }}
+            </a>
+            <a href="{% url 'toggle_block' b.blocked.username %}" class="btn btn-secondary">إلغاء الحظر</a>
+        </div>
+    {% empty %}
+        <p class="muted">لا يوجد محظورون.</p>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <h2>🔇 المستخدمون المكتومون</h2>
+    {% for m in mutes %}
+        <div class="user-row">
+            <a href="{% url 'profile' m.muted.username %}" style="font-weight:bold; color:#1c1e21; text-decoration:none;">
+                {{ m.muted.username }}
+            </a>
+            <a href="{% url 'toggle_mute' m.muted.username %}" class="btn btn-secondary">إلغاء الكتم</a>
+        </div>
+    {% empty %}
+        <p class="muted">لا يوجد مكتومون.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "posts/settings/_base.html" %}
+{% load i18n %}
+{% block settings_content %}
+
+<div class="card">
+    <h3 style="margin-top:0; font-size:17px;">❤️ {% trans "اهتماماتك" %}</h3>
+    <p class="muted" style="font-size:13px; margin-bottom:14px;">
+        {% trans "اكتب اهتماماتك مفصولة بفواصل. مثال: البرمجة، الرياضة، القراءة، السفر" %}
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div style="margin-bottom:12px;">
+            {{ field }}
+            {% if field.errors %}<div style="color:var(--danger); font-size:13px; margin-top:4px;">{{ field.errors.0 }}</div>{% endif %}
+        </div>
+        {% endfor %}
+
+        {% if profile.interests_list %}
+        <div style="margin-top:14px;">
+            <div class="muted" style="font-size:13px; margin-bottom:8px;">{% trans "اهتماماتك الحالية" %}:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                {% for i in profile.interests_list %}
+                    <span class="badge badge-blue">{{ i }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div style="display:flex; gap:8px; margin-top:16px;">
+            <button type="submit" class="btn">💾 {% trans "حفظ" %}</button>
+            <a href="{% url 'settings_index' %}" class="btn btn-secondary">{% trans "إلغاء" %}</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

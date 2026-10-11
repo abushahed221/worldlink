@@ -1,0 +1,53 @@
+{% extends "posts/base.html" %}
+{% block title %}الصفحات | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <h2 style="margin:0; font-size:20px;">📄 الصفحات</h2>
+        {% if user.is_authenticated %}<a href="{% url 'page_create' %}" class="btn btn-sm">➕ صفحة جديدة</a>{% endif %}
+    </div>
+    <form method="get" style="margin-top:12px; display:flex; gap:6px; flex-wrap:wrap;">
+        <input type="text" name="q" value="{{ query }}" placeholder="ابحث عن صفحة..." style="flex:1; min-width:140px;">
+        <select name="cat" style="width:auto; min-width:140px;">
+            <option value="">كل التصنيفات</option>
+            {% for k, v in categories %}
+                <option value="{{ k }}" {% if category == k %}selected{% endif %}>{{ v }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn">بحث</button>
+    </form>
+</div>
+
+<div class="grid">
+{% for p in pages %}
+<a href="{% url 'page_detail' p.slug %}" style="text-decoration:none; color:inherit;">
+    <div class="card group-card">
+        <div class="group-cover">
+            {% if p.cover %}<img src="{{ p.cover.url }}" alt="">{% endif %}
+        </div>
+        <div class="group-body">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="avatar avatar-sm">
+                    {% if p.avatar %}<img src="{{ p.avatar.url }}" alt="">{% else %}{{ p.name|first|upper }}{% endif %}
+                </div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ p.name }}</div>
+                    <div class="muted" style="font-size:12px;">
+                        {{ p.followers_cnt }} متابع · {{ p.get_category_display }}
+                    </div>
+                </div>
+            </div>
+            {% if p.description %}<p class="muted" style="margin-top:8px; font-size:13px;">{{ p.description|truncatechars:80 }}</p>{% endif %}
+        </div>
+    </div>
+</a>
+{% empty %}
+<div class="card" style="text-align:center; grid-column: 1/-1; padding:40px 20px;">
+    <p class="muted">لا توجد صفحات.</p>
+    {% if user.is_authenticated %}<a href="{% url 'page_create' %}" class="btn">أنشئ أول صفحة</a>{% endif %}
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}

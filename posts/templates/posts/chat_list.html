@@ -1,0 +1,62 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "المحادثات" %} | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <h2 style="margin:0; font-size:20px;">💬 {% trans "المحادثات" %}</h2>
+        <a href="{% url 'friends' %}" class="btn btn-sm">➕ {% trans "محادثة جديدة" %}</a>
+    </div>
+</div>
+
+{% for c in conversations %}
+<a href="{% url 'chat_room' c.pk %}" style="text-decoration:none; color:inherit;">
+    <div class="card" style="display:flex; align-items:center; gap:12px; transition:background 0.15s;"
+         onmouseover="this.style.background='var(--hover-bg)'"
+         onmouseout="this.style.background='var(--card-bg)'">
+        <div class="avatar">
+            {% with other=c.other_participant %}
+                {% if other.profile.avatar %}<img src="{{ other.profile.avatar.url }}" alt="">{% else %}{{ other.profile.initials }}{% endif %}
+            {% endwith %}
+        </div>
+        <div style="flex:1; min-width:0;">
+            <div style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:6px;">
+                {{ c.other_participant.profile.name }}
+                {% if c.is_secret %}<span title="{% trans "محادثة سرية" %}" style="font-size:12px;">🔒</span>{% endif %}
+                {% if c.disappear_after %}<span title="{% trans "رسائل تختفي" %}" style="font-size:12px;">⏱️</span>{% endif %}
+            </div>
+            {% with last=c.last_message %}
+                {% if last %}
+                <div class="muted" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    {% if last.sender == user %}{% trans "أنت" %}: {% endif %}
+                    {% if last.message_type == "image" %}📷 {% trans "صورة" %}
+                    {% elif last.message_type == "video" %}🎬 {% trans "فيديو" %}
+                    {% elif last.message_type == "audio" %}🎵 {% trans "ملف صوتي" %}
+                    {% elif last.message_type == "voice" %}🎤 {% trans "رسالة صوتية" %}
+                    {% elif last.message_type == "file" %}📎 {% trans "ملف" %}
+                    {% else %}{{ last.content|truncatechars:60 }}{% endif %}
+                </div>
+                {% else %}
+                <div class="muted">{% trans "لا رسائل بعد" %}</div>
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div style="text-align:left; flex-shrink:0;">
+            {% with last=c.last_message %}
+                {% if last %}<div class="muted" style="font-size:11px;">{{ last.created_at|date:"H:i" }}</div>{% endif %}
+            {% endwith %}
+            {% with uc=c.unread_count_for %}
+                {% if uc %}<span class="nav-badge" style="display:inline-block; margin-top:4px;">{{ uc }}</span>{% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</a>
+{% empty %}
+<div class="card" style="text-align:center; padding:40px 20px;">
+    <p class="muted" style="font-size:16px; margin-bottom:12px;">{% trans "لا محادثات بعد." %}</p>
+    <a href="{% url 'friends' %}" class="btn">{% trans "اذهب إلى الأصدقاء" %}</a>
+</div>
+{% endfor %}
+
+{% endblock %}

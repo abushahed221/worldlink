@@ -1,0 +1,12 @@
+{% extends "posts/base.html" %}
+{% block content %}
+<div class="card">
+    <h2>تأكيد الحذف</h2>
+    <p>هل أنت متأكد من حذف هذا المنشور؟</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">نعم، احذف</button>
+        <a href="{% url 'post_detail' post.pk %}" class="btn btn-secondary">إلغاء</a>
+    </form>
+</div>
+{% endblock %}

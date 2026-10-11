@@ -1,0 +1,65 @@
+{% extends "posts/settings/_base.html" %}
+{% load i18n %}
+{% block settings_content %}
+
+<div class="card">
+    <h3 style="margin-top:0; font-size:17px;">🔒 {% trans "الخصوصية" %}</h3>
+    <p class="muted" style="font-size:13px; margin-bottom:14px;">{% trans "تحكّم في من يرى ماذا من معلوماتك." %}</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="margin-bottom:20px;">
+            <h4 style="font-size:15px; margin:0 0 10px;">{% trans "المشاركات" %}</h4>
+            <div style="display:grid; gap:10px;">
+                <div>
+                    <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">{{ form.posts_privacy.label }}</label>
+                    {{ form.posts_privacy }}
+                </div>
+                <div>
+                    <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">{{ form.messages_privacy.label }}</label>
+                    {{ form.messages_privacy }}
+                </div>
+                <div>
+                    <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">{{ form.friend_requests_privacy.label }}</label>
+                    {{ form.friend_requests_privacy }}
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom:20px; border-top:1px solid var(--border); padding-top:16px;">
+            <h4 style="font-size:15px; margin:0 0 10px;">{% trans "ما يُعرض في ملفك" %}</h4>
+            <div style="display:grid; gap:10px;">
+                {% for field in form %}
+                    {% if "show_" in field.name %}
+                    <label style="display:flex; align-items:center; gap:10px; padding:10px; background:var(--input-bg); border-radius:10px; cursor:pointer;">
+                        {{ field }}
+                        <span style="font-size:14px;">{{ field.label }}</span>
+                    </label>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border); padding-top:16px;">
+            <h4 style="font-size:15px; margin:0 0 10px;">{% trans "تفاعلات" %}</h4>
+            <div style="display:grid; gap:10px;">
+                {% for field in form %}
+                    {% if field.name == "allow_tagging" or field.name == "searchable" %}
+                    <label style="display:flex; align-items:center; gap:10px; padding:10px; background:var(--input-bg); border-radius:10px; cursor:pointer;">
+                        {{ field }}
+                        <span style="font-size:14px;">{{ field.label }}</span>
+                    </label>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:16px;">
+            <button type="submit" class="btn">💾 {% trans "حفظ" %}</button>
+            <a href="{% url 'settings_index' %}" class="btn btn-secondary">{% trans "إلغاء" %}</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "posts/base.html" %}
+{% block title %}طلبات الصداقة | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <h2>📨 طلبات واردة</h2>
+</div>
+
+{% for r in requests %}
+<div class="card" style="display:flex; align-items:center; gap:12px;">
+    <div class="avatar">
+        {% if r.from_user.profile.avatar %}<img src="{{ r.from_user.profile.avatar.url }}">{% else %}{{ r.from_user.username|first|upper }}{% endif %}
+    </div>
+    <div style="flex:1;">
+        <a href="{% url 'profile' r.from_user.username %}" style="font-weight:bold; color:#1c1e21; text-decoration:none;">
+            {{ r.from_user.username }}
+        </a>
+        <div class="muted">{{ r.created_at|date:"Y-m-d H:i" }}</div>
+    </div>
+    <a href="{% url 'accept_friend_request' r.pk %}" class="btn btn-success btn-sm">✔️ قبول</a>
+    <a href="{% url 'decline_friend_request' r.pk %}" class="btn btn-secondary btn-sm">✖️ رفض</a>
+</div>
+{% empty %}
+<div class="card">لا طلبات واردة.</div>
+{% endfor %}
+
+<div class="card" style="margin-top:20px;">
+    <h2>📤 طلبات مرسلة</h2>
+</div>
+
+{% for s in sent %}
+<div class="card" style="display:flex; align-items:center; gap:12px;">
+    <div class="avatar">
+        {% if s.to_user.profile.avatar %}<img src="{{ s.to_user.profile.avatar.url }}">{% else %}{{ s.to_user.username|first|upper }}{% endif %}
+    </div>
+    <div style="flex:1;">
+        <a href="{% url 'profile' s.to_user.username %}" style="font-weight:bold; color:#1c1e21; text-decoration:none;">
+            {{ s.to_user.username }}
+        </a>
+    </div>
+    <span class="muted">⏳ قيد الانتظار</span>
+</div>
+{% empty %}
+<div class="card">لا طلبات مرسلة.</div>
+{% endfor %}
+
+{% endblock %}

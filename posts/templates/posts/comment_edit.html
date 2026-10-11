@@ -1,0 +1,12 @@
+{% extends "posts/base.html" %}
+{% block content %}
+<div class="card">
+    <h2>✏️ تعديل التعليق</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">حفظ</button>
+        <a href="{% url 'post_detail' comment.post.pk %}" class="btn btn-secondary">إلغاء</a>
+    </form>
+</div>
+{% endblock %}

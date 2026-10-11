@@ -1,0 +1,10 @@
+{% extends "posts/base.html" %}
+{% block title %}تحقق من بريدك | WorldLink{% endblock %}
+{% block content %}
+<div class="card" style="text-align:center;">
+    <h2>📧 تحقق من بريدك الإلكتروني</h2>
+    <p>أرسلنا لك رابط تفعيل.</p>
+    <p class="muted">في التطوير، افتح Terminal لرؤية الرابط وانسخه في المتصفح.</p>
+    <a href="{% url 'login' %}" class="btn">صفحة الدخول</a>
+</div>
+{% endblock %}

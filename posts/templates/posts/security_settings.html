@@ -1,0 +1,115 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "الأمان" %} | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <h2 style="font-size:20px; margin:0 0 14px;">🛡️ {% trans "الإعدادات الأمنية" %}</h2>
+
+    <div style="display:grid; gap:10px; margin-bottom:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--input-bg); border-radius:10px;">
+            <span>{% trans "حالة البريد الإلكتروني" %}</span>
+            {% if profile.is_verified %}
+                <span class="badge badge-green">✅ {% trans "مُفعّل" %}</span>
+            {% else %}
+                <span class="badge badge-orange">⚠️ {% trans "غير مُفعّل" %}</span>
+            {% endif %}
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--input-bg); border-radius:10px;">
+            <span>{% trans "رقم الهاتف" %}</span>
+            {% if profile.phone %}
+                <span class="badge badge-green">📱 {{ profile.phone }}</span>
+            {% else %}
+                <span class="badge">{% trans "غير مضاف" %}</span>
+            {% endif %}
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--input-bg); border-radius:10px;">
+            <span>{% trans "المصادقة الثنائية (2FA)" %}</span>
+            {% if profile.is_2fa_enabled %}
+                <span class="badge badge-green">🔐 {% trans "مُفعّلة" %}</span>
+            {% else %}
+                <span class="badge badge-orange">⚠️ {% trans "غير مُفعّلة" %}</span>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'trusted_devices' %}" style="text-decoration:none; color:inherit;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--input-bg); border-radius:10px; cursor:pointer; transition:background 0.15s;"
+                 onmouseover="this.style.background='var(--hover-bg)'"
+                 onmouseout="this.style.background='var(--input-bg)'">
+                <span>💻 {% trans "الأجهزة الموثوقة" %}</span>
+                <span class="badge badge-blue">{{ trusted_count }} {% trans "جهاز" %} →</span>
+            </div>
+        </a>
+    </div>
+
+    <div style="border-top:1px solid var(--border); padding-top:16px;">
+        <h3 style="font-size:16px; margin:0 0 8px;">🔐 {% trans "المصادقة الثنائية" %}</h3>
+        <p class="muted" style="margin-bottom:12px; font-size:13px; line-height:1.6;">
+            {% trans "تضيف طبقة أمان ثانية عند تسجيل الدخول. حتى لو سرقت كلمة مرورك، لن يدخل أحد بدون رمز من هاتفك." %}
+        </p>
+
+        {% if profile.is_2fa_enabled %}
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="{% url 'twofa_setup' %}" class="btn btn-secondary btn-sm">🔄 {% trans "إعادة الإعداد" %}</a>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('regen-form').style.display='block';">🔑 {% trans "أكواد جديدة" %}</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('disable-form').style.display='block';">🔓 {% trans "تعطيل" %}</button>
+            </div>
+
+            <form id="disable-form" method="post" action="{% url 'twofa_disable' %}" style="display:none; margin-top:14px; padding:14px; background:var(--error-msg-bg); border-radius:10px;">
+                {% csrf_token %}
+                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">{% trans "أكّد كلمة المرور لتعطيل 2FA" %}:</label>
+                <input type="password" name="password" placeholder="{% trans "كلمة المرور" %}" required>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <button type="submit" class="btn btn-danger btn-sm">{% trans "تعطيل" %}</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('disable-form').style.display='none';">{% trans "إلغاء" %}</button>
+                </div>
+            </form>
+
+            <form id="regen-form" method="post" action="{% url 'twofa_regenerate_backup' %}" style="display:none; margin-top:14px; padding:14px; background:var(--warn-bg); border-radius:10px;">
+                {% csrf_token %}
+                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px; color:var(--warn-text);">{% trans "توليد 8 أكواد احتياطية جديدة. الأكواد القديمة ستُلغى." %}</label>
+                <input type="password" name="password" placeholder="{% trans "كلمة المرور" %}" required>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <button type="submit" class="btn btn-sm">{% trans "توليد" %}</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('regen-form').style.display='none';">{% trans "إلغاء" %}</button>
+                </div>
+            </form>
+        {% else %}
+            <a href="{% url 'twofa_setup' %}" class="btn btn-success btn-sm">🛡️ {% trans "تفعيل 2FA الآن" %}</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="font-size:16px; margin:0 0 12px;">📜 {% trans "آخر محاولات الدخول" %}</h3>
+    <div style="max-height:400px; overflow-y:auto;">
+        {% for log in recent_logins %}
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--border-light); font-size:13px;">
+            <div>
+                <div style="font-weight:600;">
+                    {% if log.success %}✅ {% trans "نجاح" %}{% else %}❌ {% trans "فشل" %}{% endif %}
+                </div>
+                <div class="muted" style="font-size:12px;">{{ log.created_at|date:"Y-m-d H:i:s" }}</div>
+            </div>
+            <div class="muted" style="font-family:monospace; font-size:12px;">{{ log.ip_address|default:"—" }}</div>
+        </div>
+        {% empty %}
+        <p class="muted" style="text-align:center; padding:20px;">{% trans "لا سجل بعد." %}</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="font-size:16px; margin:0 0 12px;">💡 {% trans "نصائح أمنية" %}</h3>
+    <ul style="padding-right:20px; line-height:2; font-size:14px; color:var(--text-soft);">
+        <li>{% trans "لا تشارك كلمة المرور مع أي شخص." %}</li>
+        <li>{% trans "فعّل 2FA لحماية أقوى." %}</li>
+        <li>{% trans "راجع محاولات الدخول بانتظام." %}</li>
+        <li>{% trans "راجع الأجهزة الموثوقة واحذف ما لا تعرفه." %}</li>
+        <li>{% trans "لا تستخدم نفس كلمة المرور في مواقع أخرى." %}</li>
+    </ul>
+</div>
+
+{% endblock %}

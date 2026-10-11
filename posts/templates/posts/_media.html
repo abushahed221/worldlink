@@ -1,0 +1,28 @@
+{% if p.video %}
+<div class="media-wrapper">
+    <video class="media-video" controls preload="metadata" playsinline>
+        <source src="{{ p.video.url }}">
+        متصفحك لا يدعم الفيديو.
+    </video>
+</div>
+{% endif %}
+
+{% if p.images.all %}
+    {% with count=p.images.count %}
+    <div class="media-wrapper">
+        <div class="media-grid count-{% if count > 6 %}6{% else %}{{ count }}{% endif %}">
+            {% for img in p.images.all|slice:":6" %}
+                <a href="{{ img.image.url }}" target="_blank" rel="noopener">
+                    <img src="{{ img.image.url }}" alt="" loading="lazy">
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endwith %}
+{% elif p.image %}
+<div class="media-wrapper">
+    <a href="{{ p.image.url }}" target="_blank" rel="noopener">
+        <img src="{{ p.image.url }}" class="media-single-image" alt="" loading="lazy">
+    </a>
+</div>
+{% endif %}

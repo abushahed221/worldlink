@@ -1,0 +1,20 @@
+{
+    "name": "WorldLink",
+    "short_name": "WorldLink",
+    "description": "شبكة تواصل اجتماعي عالمية",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#f0f2f5",
+    "theme_color": "#1769aa",
+    "lang": "ar",
+    "dir": "rtl",
+    "icons": [
+        {
+            "src": "/static/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}

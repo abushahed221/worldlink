@@ -1,0 +1,27 @@
+{% extends "posts/base.html" %}
+{% block title %}إبلاغ | WorldLink{% endblock %}
+{% block content %}
+<div class="card">
+    <h2 style="font-size:18px;">🚩 إبلاغ عن رسالة</h2>
+    <p class="muted" style="margin:8px 0 14px;">
+        سيتم تحويل هذه الرسالة فقط (مع آخر 4 رسائل من نفس المرسل) إلى فريق المراجعة. باقي المحادثة تبقى سرية.
+    </p>
+    <div class="comment" style="border:1px solid #e4e6eb;">
+        <strong>{{ msg.sender.username }}</strong>
+        <div style="margin-top:4px;">
+            {% if msg.message_type == "image" %}📷 صورة
+            {% elif msg.message_type == "video" %}🎬 فيديو
+            {% elif msg.message_type == "audio" or msg.message_type == "voice" %}🎤 رسالة صوتية
+            {% elif msg.message_type == "file" %}📎 ملف
+            {% else %}{{ msg.content|truncatechars:200 }}{% endif %}
+        </div>
+        <div class="muted" style="margin-top:6px;">{{ msg.created_at|date:"Y-m-d H:i" }}</div>
+    </div>
+    <form method="post" style="margin-top:14px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-danger">إرسال الإبلاغ</button>
+        <a href="{% url 'chat_room' msg.conversation.pk %}" class="btn btn-secondary">إلغاء</a>
+    </form>
+</div>
+{% endblock %}

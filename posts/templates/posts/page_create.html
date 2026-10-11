@@ -1,0 +1,13 @@
+{% extends "posts/base.html" %}
+{% block title %}{% if page %}تعديل صفحة{% else %}صفحة جديدة{% endif %} | WorldLink{% endblock %}
+{% block content %}
+<div class="card">
+    <h2 style="font-size:20px; margin-bottom:14px;">{% if page %}✏️ تعديل صفحة{% else %}➕ صفحة جديدة{% endif %}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">{% if page %}حفظ{% else %}إنشاء{% endif %}</button>
+        <a href="{% if page %}{% url 'page_detail' page.slug %}{% else %}{% url 'page_list' %}{% endif %}" class="btn btn-secondary">إلغاء</a>
+    </form>
+</div>
+{% endblock %}

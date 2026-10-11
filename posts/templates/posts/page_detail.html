@@ -1,0 +1,83 @@
+{% extends "posts/base.html" %}
+{% block title %}{{ page.name }} | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card" style="padding:0; overflow:hidden;">
+    <div style="height:180px; background:linear-gradient(135deg, #1769aa, #4a90d9);">
+        {% if page.cover %}<img src="{{ page.cover.url }}" style="width:100%; height:100%; object-fit:cover;" alt="">{% endif %}
+    </div>
+    <div style="padding:16px;">
+        <div style="display:flex; align-items:flex-end; gap:14px; margin-top:-40px;">
+            <div class="avatar avatar-lg" style="border:4px solid white;">
+                {% if page.avatar %}<img src="{{ page.avatar.url }}" alt="">{% else %}{{ page.name|first|upper }}{% endif %}
+            </div>
+            <div style="flex:1; padding-bottom:6px;">
+                <h1 style="font-size:24px; margin:0;">{{ page.name }}</h1>
+                <div class="muted" style="margin-top:4px;">
+                    <span class="badge badge-blue">{{ page.get_category_display }}</span>
+                    · {{ page.followers_count }} متابع · {{ page.posts_count }} منشور
+                </div>
+            </div>
+        </div>
+        {% if page.description %}<p style="margin-top:14px; color:#4b4f56;">{{ page.description }}</p>{% endif %}
+        <div style="margin-top:8px;">
+            {% if page.website %}<span class="muted">🔗 <a href="{{ page.website }}" target="_blank">{{ page.website }}</a></span> ·{% endif %}
+            {% if page.phone %}<span class="muted">📞 {{ page.phone }}</span> ·{% endif %}
+            {% if page.address %}<span class="muted">📍 {{ page.address }}</span>{% endif %}
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+            {% if user.is_authenticated %}
+                {% if is_owner %}
+                    <a href="{% url 'page_edit' page.slug %}" class="btn btn-secondary btn-sm">✏️ تعديل الصفحة</a>
+                    <span class="badge badge-green">مالك الصفحة</span>
+                {% else %}
+                    <a href="{% url 'page_follow' page.slug %}"
+                       class="btn btn-sm {% if is_following %}btn-secondary{% else %}btn-success{% endif %}">
+                        {% if is_following %}✔️ إلغاء المتابعة{% else %}➕ متابعة{% endif %}
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if is_owner and form %}
+<div class="card">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">📤 نشر</button>
+    </form>
+</div>
+{% endif %}
+
+{% for p in posts %}
+<article class="card">
+    <div class="post-header">
+        <div class="avatar avatar-sm">
+            {% if page.avatar %}<img src="{{ page.avatar.url }}" alt="">{% else %}{{ page.name|first|upper }}{% endif %}
+        </div>
+        <div style="flex:1;">
+            <div style="font-weight:700;">{{ page.name }}</div>
+            <div class="muted">بقلم {{ p.author.username }} · {{ p.created_at|date:"Y-m-d H:i" }}</div>
+        </div>
+        {% if is_owner %}
+        <a href="{% url 'page_delete_post' page.slug p.pk %}"
+           onclick="return confirm('حذف المنشور؟');"
+           style="color:#d63031; text-decoration:none; font-size:18px;">🗑️</a>
+        {% endif %}
+    </div>
+    {% if p.content %}<div class="post-content">{{ p.content }}</div>{% endif %}
+    {% if p.image %}<img src="{{ p.image.url }}" class="post-image" alt="">{% endif %}
+    <div class="post-actions">
+        <a href="{% url 'page_post_like' page.slug p.pk %}" class="action-btn {% if user in p.likes.all %}liked{% endif %}">
+            {% if user in p.likes.all %}❤️{% else %}🤍{% endif %} {{ p.total_likes }}
+        </a>
+    </div>
+</article>
+{% empty %}
+<div class="card" style="text-align:center;">لا منشورات بعد.</div>
+{% endfor %}
+
+{% endblock %}

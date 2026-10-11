@@ -1,0 +1,39 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "التحقق الثنائي" %} | WorldLink{% endblock %}
+{% block content %}
+<div class="card" style="max-width:440px; margin:40px auto;">
+    <div style="text-align:center; margin-bottom:20px;">
+        <div style="font-size:48px;">🔐</div>
+        <h2 style="font-size:20px; margin:10px 0 6px;">{% trans "التحقق الثنائي مطلوب" %}</h2>
+        <p class="muted">{% trans "افتح تطبيق المصادقة (Google Authenticator، Authy) وأدخل الرمز المكوّن من 6 أرقام." %}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="margin-bottom:14px;">
+            {{ form.code }}
+            {% if form.code.errors %}
+                <div style="color:var(--danger); font-size:13px; margin-top:6px;">{{ form.code.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <label style="display:flex; align-items:center; gap:10px; padding:12px; background:var(--input-bg); border-radius:10px; cursor:pointer; margin-bottom:14px;">
+            <input type="checkbox" name="remember_device" value="1" checked style="width:18px; height:18px; accent-color:var(--accent);">
+            <span style="font-size:14px;">{% trans "تذكر هذا الجهاز لمدة 30 يومًا" %}</span>
+        </label>
+        <p class="muted" style="font-size:12px; margin:-8px 0 14px 30px; line-height:1.5;">
+            {% trans "لن يُطلب منك الرمز على هذا الجهاز مرة أخرى خلال هذه المدة." %}
+        </p>
+
+        <button type="submit" class="btn" style="width:100%; justify-content:center;">{% trans "تأكيد الدخول" %}</button>
+    </form>
+
+    <p class="muted" style="text-align:center; margin-top:14px; font-size:12px;">
+        {% trans "هل فقدت جهازك؟ أدخل أحد الأكواد الاحتياطية في نفس الحقل." %}
+    </p>
+    <p class="muted" style="text-align:center; margin-top:8px;">
+        <a href="{% url 'login' %}">← {% trans "رجوع لتسجيل الدخول" %}</a>
+    </p>
+</div>
+{% endblock %}

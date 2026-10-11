@@ -1,0 +1,51 @@
+{% extends "posts/base.html" %}
+{% block title %}الرئيسية | WorldLink{% endblock %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<div class="card">
+    <form method="post" action="{% url 'create_post' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <textarea name="content" rows="3" placeholder="بمَ تفكر يا {{ user.username }}؟"></textarea>
+
+        <div class="attach-bar">
+            <label class="attach-btn">
+                📷 صورة رئيسية
+                <input type="file" name="image" id="home_image" accept="image/*"
+                       onchange="showFileName(this, 'home_image_info')">
+            </label>
+            <label class="attach-btn">
+                🖼️ صور متعددة
+                <input type="file" name="images" id="home_images" accept="image/*" multiple
+                       onchange="previewImages(this, 'home_images_preview')">
+            </label>
+            <label class="attach-btn">
+                🎬 فيديو
+                <input type="file" name="video" id="home_video" accept="video/*"
+                       onchange="showFileName(this, 'home_video_info')">
+            </label>
+        </div>
+
+        <div id="home_image_info" class="file-info" style="display:none;"></div>
+        <div id="home_images_preview" class="preview-grid"></div>
+        <div id="home_video_info" class="file-info" style="display:none;"></div>
+
+        <div style="margin-top:10px;">
+            <button type="submit" class="btn">📤 نشر</button>
+        </div>
+    </form>
+</div>
+{% else %}
+<div class="card" style="text-align:center;">
+    <p>مرحبًا بك في WorldLink!</p>
+    <a href="{% url 'signup' %}" class="btn">انضم الآن</a>
+</div>
+{% endif %}
+
+{% for post in posts %}
+    {% include "posts/_post_card.html" with post=post %}
+{% empty %}
+<div class="card" style="text-align:center;">لا توجد منشورات. ابدأ بمشاركة فكرة!</div>
+{% endfor %}
+
+{% endblock %}

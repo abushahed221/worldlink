@@ -1,0 +1,50 @@
+{% extends "posts/base.html" %}
+{% block title %}المجموعات | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <h2 style="margin:0; font-size:20px;">👥 المجموعات</h2>
+        {% if user.is_authenticated %}<a href="{% url 'group_create' %}" class="btn btn-sm">➕ مجموعة جديدة</a>{% endif %}
+    </div>
+    <form method="get" style="margin-top:12px; display:flex; gap:6px;">
+        <input type="text" name="q" value="{{ query }}" placeholder="ابحث عن مجموعة...">
+        <button type="submit" class="btn">بحث</button>
+    </form>
+</div>
+
+<div class="grid">
+{% for g in groups %}
+<a href="{% url 'group_detail' g.slug %}" style="text-decoration:none; color:inherit;">
+    <div class="card group-card">
+        <div class="group-cover">
+            {% if g.cover %}<img src="{{ g.cover.url }}" alt="">{% endif %}
+        </div>
+        <div class="group-body">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="avatar avatar-sm">
+                    {% if g.avatar %}<img src="{{ g.avatar.url }}" alt="">{% else %}{{ g.name|first|upper }}{% endif %}
+                </div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ g.name }}</div>
+                    <div class="muted" style="font-size:12px;">
+                        {{ g.members_cnt }} عضو · {{ g.posts_cnt }} منشور
+                    </div>
+                </div>
+            </div>
+            {% if g.description %}<p class="muted" style="margin-top:8px; font-size:13px;">{{ g.description|truncatechars:80 }}</p>{% endif %}
+            <div style="margin-top:8px;">
+                {% if g.privacy == "private" %}<span class="badge badge-orange">🔒 خاصة</span>{% else %}<span class="badge badge-green">🌍 عامة</span>{% endif %}
+            </div>
+        </div>
+    </div>
+</a>
+{% empty %}
+<div class="card" style="text-align:center; grid-column: 1/-1; padding:40px 20px;">
+    <p class="muted">لا توجد مجموعات.</p>
+    {% if user.is_authenticated %}<a href="{% url 'group_create' %}" class="btn">أنشئ أول مجموعة</a>{% endif %}
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "posts/base.html" %}
+{% block title %}طلبات كثيرة | WorldLink{% endblock %}
+{% block content %}
+<div class="card" style="text-align:center; padding:50px 24px; max-width:480px; margin:40px auto;">
+    <div style="font-size:64px; margin-bottom:16px;">⏸️</div>
+    <h2 style="font-size:20px; margin:0 0 10px;">عدد كبير من الطلبات</h2>
+    <p class="muted" style="line-height:1.7;">
+        لقد أرسلت طلبات كثيرة بسرعة. لحماية النظام، نطلب منك الانتظار قليلًا.
+    </p>
+    <p class="muted" style="margin-top:14px; font-size:13px;">حاول مرة أخرى بعد دقيقة.</p>
+    <a href="{% url 'home' %}" class="btn" style="margin-top:20px;">🏠 العودة للرئيسية</a>
+</div>
+{% endblock %}

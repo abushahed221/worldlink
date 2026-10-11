@@ -1,0 +1,75 @@
+{% extends "posts/settings/_base.html" %}
+{% load i18n %}
+{% block settings_content %}
+
+<div class="card">
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <div class="avatar avatar-lg">
+            {% if profile.avatar %}<img src="{{ profile.avatar.url }}">{% else %}{{ profile.initials }}{% endif %}
+        </div>
+        <div style="flex:1; min-width:200px;">
+            <h2 style="margin:0 0 6px;">{{ profile.name }}</h2>
+            <p class="muted" style="margin:0 0 10px;">{{ user.email }}</p>
+            <a href="{% url 'profile' user.username %}" class="btn btn-secondary btn-sm">{% trans "عرض ملفي العام" %} →</a>
+        </div>
+        <div style="text-align:center;">
+            <div style="font-size:36px; font-weight:800; color:var(--accent);">{{ profile.profile_completeness }}%</div>
+            <div class="muted" style="font-size:12px;">{% trans "اكتمال الملف" %}</div>
+        </div>
+    </div>
+</div>
+
+<div class="grid" style="grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));">
+    <a href="{% url 'settings_profile' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px;">
+        <div style="font-size:32px;">🖼️</div>
+        <div style="font-weight:700; margin-top:8px;">{% trans "الملف الشخصي" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "الصورة، الغلاف، النبذة" %}</div>
+    </a>
+    <a href="{% url 'settings_personal' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px;">
+        <div style="font-size:32px;">👤</div>
+        <div style="font-weight:700; margin-top:8px;">{% trans "المعلومات الشخصية" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "الميلاد، الجنس، الحالة" %}</div>
+    </a>
+    <a href="{% url 'settings_work' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px;">
+        <div style="font-size:32px;">💼</div>
+        <div style="font-weight:700; margin-top:8px;">{% trans "العمل والتعليم" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "الوظيفة، الجامعة" %}</div>
+    </a>
+    <a href="{% url 'settings_interests' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px;">
+        <div style="font-size:32px;">❤️</div>
+        <div style="font-weight:700; margin-top:8px;">{% trans "الاهتمامات" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "ما تحبه" %}</div>
+    </a>
+    <a href="{% url 'settings_privacy' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px;">
+        <div style="font-size:32px;">🔒</div>
+        <div style="font-weight:700; margin-top:8px;">{% trans "الخصوصية" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "من يرى ماذا" %}</div>
+    </a>
+    <a href="{% url 'settings_notifications' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px;">
+        <div style="font-size:32px;">🔔</div>
+        <div style="font-weight:700; margin-top:8px;">{% trans "الإشعارات" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "ما يصلك" %}</div>
+    </a>
+    <a href="{% url 'settings_appearance' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px;">
+        <div style="font-size:32px;">🎨</div>
+        <div style="font-weight:700; margin-top:8px;">{% trans "المظهر" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "فاتح/داكن" %}</div>
+    </a>
+    <a href="{% url 'security_settings' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px;">
+        <div style="font-size:32px;">🛡️</div>
+        <div style="font-weight:700; margin-top:8px;">{% trans "الأمان" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "2FA والمزيد" %}</div>
+    </a>
+    <a href="{% url 'settings_account' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px;">
+        <div style="font-size:32px;">📧</div>
+        <div style="font-weight:700; margin-top:8px;">{% trans "الحساب" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "البريد، كلمة المرور" %}</div>
+    </a>
+    <a href="{% url 'settings_delete_account' %}" class="card" style="text-decoration:none; color:inherit; text-align:center; padding:20px; border:1px solid var(--danger);">
+        <div style="font-size:32px;">🗑️</div>
+        <div style="font-weight:700; margin-top:8px; color:var(--danger);">{% trans "حذف الحساب" %}</div>
+        <div class="muted" style="font-size:12px;">{% trans "نهائي" %}</div>
+    </a>
+</div>
+
+{% endblock %}

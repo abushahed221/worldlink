@@ -1,0 +1,18 @@
+{% extends "posts/base.html" %}
+{% block title %}اقتباس منشور | WorldLink{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>إعادة نشر مع تعليق</h2>
+
+    <div class="comment">
+        <strong><a href="{% url 'profile' original.author.username %}">{{ original.author.username }}</a></strong>
+        {{ original.content }}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="content" rows="3" placeholder="أضف تعليقك..."></textarea>
+        <button type="submit">إعادة النشر</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "posts/base.html" %}
+{% block title %}إعداد 2FA | WorldLink{% endblock %}
+{% block content %}
+<div class="card" style="max-width:560px; margin:30px auto;">
+    <h2 style="font-size:20px; margin-bottom:8px;">🔐 تفعيل المصادقة الثنائية</h2>
+    <p class="muted" style="margin-bottom:18px;">
+        اتبع الخطوات التالية لتفعيل 2FA على حسابك:
+    </p>
+
+    <div style="background:var(--accent-soft); padding:14px; border-radius:12px; margin-bottom:18px;">
+        <ol style="padding-right:20px; line-height:1.9; font-size:14px;">
+            <li>حمّل تطبيق <strong>Google Authenticator</strong> أو <strong>Authy</strong> من متجر التطبيقات.</li>
+            <li>افتح التطبيق، اضغط <strong>➕ إضافة حساب</strong>.</li>
+            <li>اختر <strong>Scan QR Code</strong> أو <strong>Enter setup key</strong>.</li>
+            <li>امسح الصورة أدناه أو أدخل المفتاح يدويًا.</li>
+            <li>أدخل الرمز المكوّن من 6 أرقام الذي يظهر في التطبيق هنا.</li>
+        </ol>
+    </div>
+
+    <div style="text-align:center; margin:20px 0;">
+        {% if qr_data_url %}
+            <img src="{{ qr_data_url }}" alt="QR Code" style="width:220px; height:220px; border-radius:12px; border:6px solid var(--card-bg); box-shadow:var(--shadow-md);">
+        {% else %}
+            <p class="muted">تعذّر توليد QR. استخدم المفتاح يدويًا.</p>
+        {% endif %}
+    </div>
+
+    <div style="background:var(--input-bg); padding:12px; border-radius:10px; margin-bottom:20px;">
+        <div class="muted" style="font-size:12px; margin-bottom:4px;">المفتاح اليدوي:</div>
+        <div style="font-family:monospace; font-size:15px; letter-spacing:1px; word-break:break-all; user-select:all; text-align:center;">
+            {{ secret }}
+        </div>
+    </div>
+
+    <form method="post" action="{% url 'twofa_enable' %}">
+        {% csrf_token %}
+        <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">
+            أدخل الرمز من التطبيق:
+        </label>
+        {{ form.code }}
+        <div style="display:flex; gap:8px; margin-top:16px;">
+            <button type="submit" class="btn" style="flex:1; justify-content:center;">✅ تفعيل 2FA</button>
+            <a href="{% url 'security_settings' %}" class="btn btn-secondary">إلغاء</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

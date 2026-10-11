@@ -1,0 +1,27 @@
+{% extends "posts/base.html" %}
+{% block title %}المحفوظات | WorldLink{% endblock %}
+{% block content %}
+<h2>🔖 المحفوظات</h2>
+
+{% for bm in bookmarks %}
+<article class="card">
+    <div class="post-header">
+        <div class="avatar">{{ bm.post.author.username|first|upper }}</div>
+        <div>
+            <a href="{% url 'profile' bm.post.author.username %}" style="font-weight:bold; color:#1c1e21; text-decoration:none;">
+                {{ bm.post.author.username }}
+            </a>
+            <div class="muted">{{ bm.post.created_at|date:"Y-m-d H:i" }}</div>
+        </div>
+    </div>
+    <div class="post-content">{{ bm.post.content }}</div>
+    {% if bm.post.image %}<img src="{{ bm.post.image.url }}" class="post-image">{% endif %}
+    <div class="post-actions">
+        <a href="{% url 'post_detail' bm.post.pk %}">فتح</a>
+        <a href="{% url 'toggle_bookmark' bm.post.pk %}">إزالة</a>
+    </div>
+</article>
+{% empty %}
+<div class="card">لا توجد منشورات محفوظة.</div>
+{% endfor %}
+{% endblock %}

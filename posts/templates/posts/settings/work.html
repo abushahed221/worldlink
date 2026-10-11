@@ -1,0 +1,25 @@
+{% extends "posts/settings/_base.html" %}
+{% load i18n %}
+{% block settings_content %}
+
+<div class="card">
+    <h3 style="margin-top:0; font-size:17px;">💼 {% trans "العمل والتعليم" %}</h3>
+    <form method="post">
+        {% csrf_token %}
+        <div style="display:grid; gap:12px;">
+            {% for field in form %}
+            <div>
+                <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<div style="color:var(--danger); font-size:13px; margin-top:4px;">{{ field.errors.0 }}</div>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <div style="display:flex; gap:8px; margin-top:16px;">
+            <button type="submit" class="btn">💾 {% trans "حفظ" %}</button>
+            <a href="{% url 'settings_index' %}" class="btn btn-secondary">{% trans "إلغاء" %}</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

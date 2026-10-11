@@ -1,0 +1,40 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "الإشعارات" %} | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <h2 style="font-size:20px; margin:0;">🔔 {% trans "الإشعارات" %}</h2>
+</div>
+
+{% for n in notifications %}
+<div class="comment">
+    <strong>
+        <a href="{% url 'profile' n.sender.username %}" style="color:var(--accent); text-decoration:none;">
+            {{ n.sender.profile.name }}
+        </a>
+    </strong>
+    {% if n.notification_type == "like" %} ❤️ {% trans "أعجب بمنشورك" %}.
+    {% elif n.notification_type == "comment" %} 💬 {% trans "علّق على منشورك" %}.
+    {% elif n.notification_type == "comment_reply" %} ↩️ {% trans "رد على تعليقك" %}.
+    {% elif n.notification_type == "comment_like" %} ❤️ {% trans "أعجب بتعليقك" %}.
+    {% elif n.notification_type == "follow" %} ➕ {% trans "بدأ متابعتك" %}.
+    {% elif n.notification_type == "repost" %} 🔁 {% trans "أعاد نشر منشورك" %}.
+    {% elif n.notification_type == "friend_request" %} 🤝 {% trans "أرسل لك طلب صداقة" %}. <a href="{% url 'friend_requests' %}">{% trans "عرض" %}</a>
+    {% elif n.notification_type == "friend_accept" %} ✅ {% trans "قبل صداقتك" %}.
+    {% elif n.notification_type == "message" %} 💬 {{ n.message }}
+    {% elif n.notification_type == "group_join" %} 👥 {{ n.message }}
+    {% elif n.notification_type == "group_post" %} 📝 {{ n.message }}
+    {% elif n.notification_type == "page_follow" %} 📄 {{ n.message }}
+    {% elif n.notification_type == "page_post" %} 📄 {{ n.message }}
+    {% elif n.notification_type == "warning" %} ⚠️ {{ n.message }}
+    {% elif n.notification_type == "suspension" %} ⛔ {{ n.message }}
+    {% endif %}
+    {% if n.post %}<a href="{% url 'post_detail' n.post.pk %}">{% trans "عرض المنشور" %}</a>{% endif %}
+    <div class="muted">{{ n.created_at|date:"Y-m-d H:i" }}</div>
+</div>
+{% empty %}
+<div class="card" style="text-align:center;">{% trans "لا إشعارات." %}</div>
+{% endfor %}
+
+{% endblock %}

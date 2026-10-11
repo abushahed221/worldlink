@@ -1,0 +1,737 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WorldLink 1.0\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "العربية"
+msgstr "Arabic"
+
+msgid "English"
+msgstr "English"
+
+msgid "الرئيسية"
+msgstr "Home"
+
+msgid "استكشاف"
+msgstr "Explore"
+
+msgid "المجموعات"
+msgstr "Groups"
+
+msgid "الصفحات"
+msgstr "Pages"
+
+msgid "المحادثات"
+msgstr "Chats"
+
+msgid "الأصدقاء"
+msgstr "Friends"
+
+msgid "الإشعارات"
+msgstr "Notifications"
+
+msgid "الإعدادات"
+msgstr "Settings"
+
+msgid "دخول"
+msgstr "Login"
+
+msgid "حساب جديد"
+msgstr "Sign up"
+
+msgid "خروج"
+msgstr "Logout"
+
+msgid "تبديل الوضع"
+msgstr "Toggle theme"
+
+msgid "حفظ"
+msgstr "Save"
+
+msgid "إلغاء"
+msgstr "Cancel"
+
+msgid "حذف"
+msgstr "Delete"
+
+msgid "تعديل"
+msgstr "Edit"
+
+msgid "إزالة"
+msgstr "Remove"
+
+msgid "بحث"
+msgstr "Search"
+
+msgid "فتح"
+msgstr "Open"
+
+msgid "عرض"
+msgstr "View"
+
+msgid "عرض المنشور"
+msgstr "View post"
+
+msgid "متابعة"
+msgstr "Follow"
+
+msgid "إلغاء المتابعة"
+msgstr "Unfollow"
+
+msgid "إضافة صديق"
+msgstr "Add friend"
+
+msgid "إزالة الصداقة"
+msgstr "Remove friend"
+
+msgid "طلب معلّق"
+msgstr "Request pending"
+
+msgid "محادثة"
+msgstr "Chat"
+
+msgid "محادثة جديدة"
+msgstr "New chat"
+
+msgid "محادثة سرية"
+msgstr "Secret chat"
+
+msgid "رسائل تختفي"
+msgstr "Disappearing messages"
+
+msgid "صورة"
+msgstr "Photo"
+
+msgid "فيديو"
+msgstr "Video"
+
+msgid "ملف صوتي"
+msgstr "Audio file"
+
+msgid "رسالة صوتية"
+msgstr "Voice message"
+
+msgid "ملف"
+msgstr "File"
+
+msgid "لا رسائل بعد"
+msgstr "No messages yet"
+
+msgid "اذهب إلى الأصدقاء"
+msgstr "Go to friends"
+
+msgid "لا محادثات بعد."
+msgstr "No chats yet."
+
+msgid "منشور"
+msgstr "Post"
+
+msgid "منشورات"
+msgstr "Posts"
+
+msgid "تعليق"
+msgstr "Comment"
+
+msgid "تعليقات"
+msgstr "Comments"
+
+msgid "رد"
+msgstr "Reply"
+
+msgid "إرسال الرد"
+msgstr "Send reply"
+
+msgid "اكتب ردًا على"
+msgstr "Reply to"
+
+msgid "حذف التعليق؟"
+msgstr "Delete this comment?"
+
+msgid "حذف الرد؟"
+msgstr "Delete this reply?"
+
+msgid "إعجاب"
+msgstr "Like"
+
+msgid "مشاركة"
+msgstr "Share"
+
+msgid "مشاركة خارجية"
+msgstr "External share"
+
+msgid "اقتباس"
+msgstr "Quote"
+
+msgid "تعديل المنشور"
+msgstr "Edit post"
+
+msgid "حذف المنشور"
+msgstr "Delete post"
+
+msgid "حذف المنشور؟"
+msgstr "Delete this post?"
+
+msgid "إخفاء هذا المنشور"
+msgstr "Hide this post"
+
+msgid "إخفاء كل منشورات"
+msgstr "Hide all posts from"
+
+msgid "كتم"
+msgstr "Mute"
+
+msgid "إلغاء الكتم"
+msgstr "Unmute"
+
+msgid "حظر"
+msgstr "Block"
+
+msgid "إلغاء الحظر"
+msgstr "Unblock"
+
+msgid "إبلاغ"
+msgstr "Report"
+
+msgid "متابع"
+msgstr "Follower"
+
+msgid "يتابع"
+msgstr "Following"
+
+msgid "صديق"
+msgstr "Friend"
+
+msgid "أصدقائي"
+msgstr "My friends"
+
+msgid "لا أصدقاء بعد."
+msgstr "No friends yet."
+
+msgid "ابحث عن أشخاص"
+msgstr "Find people"
+
+msgid "المستخدمون"
+msgstr "Users"
+
+msgid "لا نتائج."
+msgstr "No results."
+
+msgid "الملف"
+msgstr "Profile"
+
+msgid "تعديل الملف"
+msgstr "Edit profile"
+
+msgid "الاسم الكامل"
+msgstr "Full name"
+
+msgid "الصورة الشخصية"
+msgstr "Profile picture"
+
+msgid "صورة الغلاف"
+msgstr "Cover photo"
+
+msgid "نبذة عنك"
+msgstr "About you"
+
+msgid "المدينة الحالية"
+msgstr "Current city"
+
+msgid "المدينة الأصلية"
+msgstr "Hometown"
+
+msgid "الموقع الإلكتروني"
+msgstr "Website"
+
+msgid "تاريخ الميلاد"
+msgstr "Birthdate"
+
+msgid "الجنس"
+msgstr "Gender"
+
+msgid "الحالة الاجتماعية"
+msgstr "Relationship status"
+
+msgid "اللغات (مفصولة بفواصل)"
+msgstr "Languages (comma separated)"
+
+msgid "التعليم (الجامعة / التخصص)"
+msgstr "Education (university / major)"
+
+msgid "المسمى الوظيفي"
+msgstr "Job title"
+
+msgid "جهة العمل"
+msgstr "Workplace"
+
+msgid "اهتماماتك"
+msgstr "Your interests"
+
+msgid "من يرى منشوراتي"
+msgstr "Who sees my posts"
+
+msgid "من يستطيع مراسلتي"
+msgstr "Who can message me"
+
+msgid "من يستطيع إرسال طلب صداقة"
+msgstr "Who can send me a friend request"
+
+msgid "إظهار البريد الإلكتروني في ملفي"
+msgstr "Show email on my profile"
+
+msgid "إظهار رقم الهاتف في ملفي"
+msgstr "Show phone on my profile"
+
+msgid "إظهار تاريخ الميلاد"
+msgstr "Show birthdate"
+
+msgid "إظهار الحالة الاجتماعية"
+msgstr "Show relationship status"
+
+msgid "السماح بالإشارة إليّ في المنشورات"
+msgstr "Allow tagging me in posts"
+
+msgid "السماح بظهوري في نتائج البحث"
+msgstr "Allow finding me in search"
+
+msgid "إشعارات الرسائل الخاصة"
+msgstr "Private message notifications"
+
+msgid "عندما يتابعني أحد"
+msgstr "When someone follows me"
+
+msgid "عندما يُعجب أحد بمنشوراتي"
+msgstr "When someone likes my posts"
+
+msgid "عندما يعلّق أحد على منشوراتي"
+msgstr "When someone comments on my posts"
+
+msgid "منشورات جديدة في مجموعاتي"
+msgstr "New posts in my groups"
+
+msgid "منشورات جديدة في الصفحات التي أتابعها"
+msgstr "New posts in pages I follow"
+
+msgid "طلبات الصداقة"
+msgstr "Friend requests"
+
+msgid "إرسال إشعارات إلى بريدي الإلكتروني"
+msgstr "Send email notifications"
+
+msgid "المظهر الافتراضي"
+msgstr "Default theme"
+
+msgid "البريد الإلكتروني"
+msgstr "Email"
+
+msgid "رقم الهاتف"
+msgstr "Phone number"
+
+msgid "كلمة المرور"
+msgstr "Password"
+
+msgid "كلمة المرور الحالية"
+msgstr "Current password"
+
+msgid "كلمة المرور الجديدة"
+msgstr "New password"
+
+msgid "تأكيد كلمة المرور الجديدة"
+msgstr "Confirm new password"
+
+msgid "الخصوصية"
+msgstr "Privacy"
+
+msgid "المظهر"
+msgstr "Appearance"
+
+msgid "الأمان"
+msgstr "Security"
+
+msgid "الحساب"
+msgstr "Account"
+
+msgid "نظرة عامة"
+msgstr "Overview"
+
+msgid "شخصي"
+msgstr "Personal"
+
+msgid "العمل"
+msgstr "Work"
+
+msgid "اهتمامات"
+msgstr "Interests"
+
+msgid "التعليم"
+msgstr "Education"
+
+msgid "يعيش في"
+msgstr "Lives in"
+
+msgid "من"
+msgstr "From"
+
+msgid "سنة"
+msgstr "years"
+
+msgid "اللغات"
+msgstr "Languages"
+
+msgid "الاهتمامات"
+msgstr "Interests"
+
+msgid "الموقع"
+msgstr "Website"
+
+msgid "الهاتف"
+msgstr "Phone"
+
+msgid "البريد"
+msgstr "Email"
+
+msgid "في"
+msgstr "at"
+
+msgid "عن"
+msgstr "About"
+
+msgid "المنشورات خاصة"
+msgstr "Posts are private"
+
+msgid "هذا المستخدم لا يشارك منشوراته مع الجميع."
+msgstr "This user doesn't share posts publicly."
+
+msgid "لا توجد منشورات."
+msgstr "No posts yet."
+
+msgid "أعجب بمنشورك"
+msgstr "liked your post"
+
+msgid "علّق على منشورك"
+msgstr "commented on your post"
+
+msgid "رد على تعليقك"
+msgstr "replied to your comment"
+
+msgid "أعجب بتعليقك"
+msgstr "liked your comment"
+
+msgid "بدأ متابعتك"
+msgstr "started following you"
+
+msgid "أعاد نشر منشورك"
+msgstr "reposted your post"
+
+msgid "أرسل لك طلب صداقة"
+msgstr "sent you a friend request"
+
+msgid "قبل صداقتك"
+msgstr "accepted your friend request"
+
+msgid "لا إشعارات."
+msgstr "No notifications."
+
+msgid "البحث عن"
+msgstr "Search for"
+
+msgid "ابحث..."
+msgstr "Search..."
+
+msgid "شاهد هذا المنشور"
+msgstr "Check out this post"
+
+msgid "تم نسخ الرابط"
+msgstr "Link copied"
+
+msgid "انسخ الرابط"
+msgstr "Copy the link"
+
+msgid "يتوفّر إصدار جديد"
+msgstr "A new version is available"
+
+msgid "اضغط تحديث للحصول على أحدث الميزات"
+msgstr "Click update to get the latest features"
+
+msgid "تحديث"
+msgstr "Update"
+
+msgid "لا يوجد اتصال بالإنترنت"
+msgstr "No internet connection"
+
+msgid "يبدو أنك غير متصل حاليًا. تحقق من اتصالك وحاول مرة أخرى."
+msgstr "It seems you're offline. Check your connection and try again."
+
+msgid "إعادة المحاولة"
+msgstr "Retry"
+
+msgid "أنت"
+msgstr "You"
+
+msgid "إزالة الصداقة؟"
+msgstr "Remove friend?"
+
+msgid "المنشورات"
+msgstr "Posts"
+
+msgid "أصدقاء"
+msgstr "Friends"
+
+msgid "لا طلبات واردة."
+msgstr "No incoming requests."
+
+msgid "طلبات واردة"
+msgstr "Incoming requests"
+
+msgid "طلبات مرسلة"
+msgstr "Sent requests"
+
+msgid "قبول"
+msgstr "Accept"
+
+msgid "رفض"
+msgstr "Decline"
+
+msgid "قيد الانتظار"
+msgstr "Pending"
+
+msgid "قبول صداقة"
+msgstr "Accept friend"
+
+msgid "إدارة حسابك وخصوصيتك"
+msgstr "Manage your account and privacy"
+
+msgid "عرض ملفي العام"
+msgstr "View my public profile"
+
+msgid "اكتمال الملف"
+msgstr "Profile completeness"
+
+msgid "الصورة، الغلاف، النبذة"
+msgstr "Picture, cover, bio"
+
+msgid "الميلاد، الجنس، الحالة"
+msgstr "Birthdate, gender, status"
+
+msgid "الوظيفة، الجامعة"
+msgstr "Job, university"
+
+msgid "ما تحبه"
+msgstr "What you love"
+
+msgid "من يرى ماذا"
+msgstr "Who sees what"
+
+msgid "ما يصلك"
+msgstr "What you receive"
+
+msgid "فاتح/داكن"
+msgstr "Light/Dark"
+
+msgid "2FA والمزيد"
+msgstr "2FA and more"
+
+msgid "البريد، كلمة المرور"
+msgstr "Email, password"
+
+msgid "نهائي"
+msgstr "Permanent"
+
+msgid "هذه المعلومات تُساعد الأصدقاء على معرفتك أكثر. يمكنك إخفاؤها من الخصوصية."
+msgstr "This info helps friends know you better. You can hide it from privacy settings."
+
+msgid "اكتب اهتماماتك مفصولة بفواصل. مثال: البرمجة، الرياضة، القراءة، السفر"
+msgstr "Write your interests separated by commas. Ex: Programming, Sports, Reading, Travel"
+
+msgid "اهتماماتك الحالية"
+msgstr "Your current interests"
+
+msgid "تحكّم في من يرى ماذا من معلوماتك."
+msgstr "Control who sees what of your information."
+
+msgid "المشاركات"
+msgstr "Posts"
+
+msgid "ما يُعرض في ملفك"
+msgstr "What appears on your profile"
+
+msgid "تفاعلات"
+msgstr "Interactions"
+
+msgid "اختر ما يصل إليك."
+msgstr "Choose what reaches you."
+
+msgid "اختر المظهر الافتراضي. يمكنك تغييره من الزر 🌙 في الأعلى."
+msgstr "Choose the default theme. You can change it from the 🌙 button above."
+
+msgid "البريد والهاتف"
+msgstr "Email and phone"
+
+msgid "تغيير كلمة المرور"
+msgstr "Change password"
+
+msgid "تصدير بياناتي"
+msgstr "Export my data"
+
+msgid "احصل على نسخة من كل بياناتك (منشورات، رسائل، ملفك)."
+msgstr "Get a copy of all your data (posts, messages, profile)."
+
+msgid "قيد التطوير."
+msgstr "Under development."
+
+msgid "حذف نهائي. لا يمكن التراجع."
+msgstr "Permanent deletion. Cannot be undone."
+
+msgid "حذف حسابي"
+msgstr "Delete my account"
+
+msgid "حذف الحساب نهائيًا"
+msgstr "Delete account permanently"
+
+msgid "سيتم حذف كل شيء:"
+msgstr "Everything will be deleted:"
+
+msgid "منشوراتك وتعليقاتك"
+msgstr "Your posts and comments"
+
+msgid "محادثاتك ورسائلك"
+msgstr "Your chats and messages"
+
+msgid "أصدقاؤك ومتابعاتك"
+msgstr "Your friends and follows"
+
+msgid "مجموعاتك وصفحاتك"
+msgstr "Your groups and pages"
+
+msgid "كل شيء — بشكل نهائي"
+msgstr "Everything — permanently"
+
+msgid "لا يمكن التراجع عن هذا الإجراء."
+msgstr "This action cannot be undone."
+
+msgid "تأكيد نهائي: حذف حسابك؟"
+msgstr "Final confirmation: delete your account?"
+
+msgid "احذف حسابي نهائيًا"
+msgstr "Delete my account permanently"
+
+msgid "جامعة عدن - هندسة حاسوب"
+msgstr "Aden University - Computer Engineering"
+
+msgid "مهندس برمجيات"
+msgstr "Software Engineer"
+
+msgid "شركة..."
+msgstr "Company..."
+
+msgid "برمجة، رياضة، قراءة، سفر، تصوير..."
+msgstr "Programming, sports, reading, travel, photography..."
+
+msgid "العربية، الإنجليزية"
+msgstr "Arabic, English"
+
+msgid "مثال: علي خالد صالح العنسي"
+msgstr "Example: Ali Khaled Saleh Al-Ansi"
+
+msgid "ذكر"
+msgstr "Male"
+
+msgid "أنثى"
+msgstr "Female"
+
+msgid "أخرى"
+msgstr "Other"
+
+msgid "غير محدد"
+msgstr "Not specified"
+
+msgid "أعزب / عزباء"
+msgstr "Single"
+
+msgid "مخطوب / مخطوبة"
+msgstr "Engaged"
+
+msgid "متزوج / متزوجة"
+msgstr "Married"
+
+msgid "مطلق / مطلقة"
+msgstr "Divorced"
+
+msgid "أرمل / أرملة"
+msgstr "Widowed"
+
+msgid "🌍 عامة — الجميع"
+msgstr "🌍 Public — Everyone"
+
+msgid "👥 الأصدقاء فقط"
+msgstr "👥 Friends only"
+
+msgid "🔒 خاصة — أنا فقط"
+msgstr "🔒 Private — Only me"
+
+msgid "الجميع"
+msgstr "Everyone"
+
+msgid "لا أحد"
+msgstr "Nobody"
+
+msgid "أصدقاء الأصدقاء"
+msgstr "Friends of friends"
+
+msgid "تلقائي"
+msgstr "Auto"
+
+msgid "نهاري"
+msgstr "Light"
+
+msgid "ليلي"
+msgstr "Dark"
+
+msgid "عادية"
+msgstr "Normal"
+
+msgid "سرية 🔒"
+msgstr "Secret 🔒"
+
+msgid "بدون اختفاء"
+msgstr "No disappearing"
+
+msgid "5 دقائق"
+msgstr "5 minutes"
+
+msgid "ساعة"
+msgstr "1 hour"
+
+msgid "يوم"
+msgstr "1 day"
+
+msgid "أسبوع"
+msgstr "1 week"
+
+msgid "عامة"
+msgstr "Public"
+
+msgid "خاصة"
+msgstr "Private"
+
+msgid "مشرف"
+msgstr "Admin"
+
+msgid "مراقب"
+msgstr "Moderator"
+
+msgid "عضو"
+msgstr "Member"
+
+msgid "نص"
+msgstr "Text"
+
+msgid "صوت"
+msgstr "Audio"
+
+msgid "تسجيل صوتي"
+msgstr "Voice message"

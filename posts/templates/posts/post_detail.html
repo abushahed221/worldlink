@@ -1,0 +1,123 @@
+{% extends "posts/base.html" %}
+{% block title %}منشور | WorldLink{% endblock %}
+{% block content %}
+
+<article class="card" id="post-top">
+    <div class="post-header">
+        <a href="{% url 'profile' post.author.username %}">
+            <div class="avatar">
+                {% if post.author.profile.avatar %}<img src="{{ post.author.profile.avatar.url }}" alt="">{% else %}{{ post.author.username|first|upper }}{% endif %}
+            </div>
+        </a>
+        <div style="flex:1; min-width:0;">
+            <a href="{% url 'profile' post.author.username %}" class="post-username">
+                {{ post.author.username }}
+            </a>
+            <div class="muted">{{ post.created_at|date:"Y-m-d H:i" }}</div>
+        </div>
+        {% if user != post.author %}
+        <details style="position:relative;">
+            <summary style="padding:6px 12px; border-radius:50%; font-size:20px; color:#65676b;">⋯</summary>
+            <div class="dropdown-menu">
+                <a href="{% url 'report_post' post.pk %}" class="danger">⚠️ إبلاغ</a>
+                <a href="{% url 'mute_user' post.author.username %}">🔇 كتم {{ post.author.username }}</a>
+                <a href="{% url 'block_user' post.author.username %}" class="danger" onclick="return confirm('حظر {{ post.author.username }}؟');">⛔ حظر</a>
+            </div>
+        </details>
+        {% endif %}
+    </div>
+
+    {% if post.repost_of %}
+        {% if post.content %}<div class="post-content">{{ post.content }}</div>{% endif %}
+        <div class="comment" style="border:1px solid #e4e6eb;">
+            <div class="comment-header">
+                <div class="avatar avatar-sm">
+                    {% if post.repost_of.author.profile.avatar %}<img src="{{ post.repost_of.author.profile.avatar.url }}" alt="">{% else %}{{ post.repost_of.author.username|first|upper }}{% endif %}
+                </div>
+                <div>
+                    <a href="{% url 'profile' post.repost_of.author.username %}">{{ post.repost_of.author.username }}</a>
+                    <span class="muted">· {{ post.repost_of.created_at|date:"Y-m-d" }}</span>
+                </div>
+            </div>
+            <div class="post-content" style="margin:6px 0 0;">{{ post.repost_of.content }}</div>
+            {% include "posts/_media.html" with p=post.repost_of %}
+        </div>
+    {% else %}
+        {% if post.content %}<div class="post-content">{{ post.content }}</div>{% endif %}
+        {% include "posts/_media.html" with p=post %}
+    {% endif %}
+
+    <div class="post-actions">
+        <a href="{% url 'toggle_like' post.pk %}" class="action-btn {% if user in post.likes.all %}liked{% endif %}">
+            {% if user in post.likes.all %}❤️{% else %}🤍{% endif %} {{ post.total_likes }}
+        </a>
+        <span class="action-btn">💬 {{ post.total_comments }}</span>
+        <a href="{% url 'repost' post.pk %}" class="action-btn">🔁 {{ post.total_reposts }}</a>
+        <a href="{% url 'quote_post' post.pk %}" class="action-btn">✍️ اقتباس</a>
+        <a href="#" onclick="sharePost({{ post.pk }}, '{{ post.content|truncatechars:60|escapejs }}'); return false;" class="action-btn">📤 مشاركة</a>
+        <a href="{% url 'toggle_bookmark' post.pk %}" class="action-btn {% if is_bookmarked %}saved{% endif %}">
+            {% if is_bookmarked %}🔖 محفوظ{% else %}📑 حفظ{% endif %}
+        </a>
+    </div>
+
+    {% if user == post.author %}
+    <div class="post-author-actions">
+        <a href="{% url 'edit_post' post.pk %}" class="btn btn-secondary btn-sm">✏️ تعديل</a>
+        <a href="{% url 'delete_post' post.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('حذف المنشور؟');">🗑️ حذف</a>
+    </div>
+    {% endif %}
+</article>
+
+<div class="card" id="comments" style="scroll-margin-top: 80px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+        <h3 style="margin:0; font-size:17px;">💬 التعليقات ({{ post.total_comments }})</h3>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <a href="?sort=new#comments" class="btn btn-sm {% if sort == 'new' %}{% else %}btn-secondary{% endif %}">🆕 الأحدث</a>
+            <a href="?sort=old#comments" class="btn btn-sm {% if sort == 'old' %}{% else %}btn-secondary{% endif %}">📜 الأقدم</a>
+            <a href="?sort=liked#comments" class="btn btn-sm {% if sort == 'liked' %}{% else %}btn-secondary{% endif %}">❤️ الأكثر إعجابًا</a>
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+    <form method="post" style="margin-bottom:14px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">إضافة تعليق</button>
+    </form>
+    {% else %}
+        <p class="muted">سجّل الدخول للتعليق.</p>
+    {% endif %}
+
+    {% for c in top_comments %}
+        {% include "posts/_comment.html" with comment=c %}
+    {% empty %}
+        <p class="muted">لا توجد تعليقات بعد.</p>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+            setTimeout(function () {
+                const offset = 80;
+                const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top: top, behavior: "smooth" });
+            }, 100);
+        }
+    }
+});
+
+function toggleReply(id) {
+    const form = document.getElementById('reply-' + id);
+    if (!form) return;
+    form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+    if (form.style.display === 'block') {
+        const ta = form.querySelector('textarea');
+        if (ta) ta.focus();
+    }
+}
+</script>
+
+{% endblock %}

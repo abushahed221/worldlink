@@ -1,0 +1,78 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "البحث" %} | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <h2 style="font-size:20px; margin:0;">🔍 {% trans "البحث عن" %}: {{ query }}</h2>
+    <form action="{% url 'search' %}" method="get" class="search-bar" style="margin-top:12px;">
+        <input type="text" name="q" value="{{ query }}" placeholder="{% trans "ابحث..." %}">
+        <button type="submit" class="btn">{% trans "بحث" %}</button>
+    </form>
+</div>
+
+{% if users %}
+<div class="card">
+    <h3 style="font-size:16px;">👤 {% trans "المستخدمون" %}</h3>
+    {% for u in users %}
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border-light);">
+            <div class="avatar avatar-sm">
+                {% if u.profile.avatar %}<img src="{{ u.profile.avatar.url }}" alt="">{% else %}{{ u.profile.initials }}{% endif %}
+            </div>
+            <div style="flex:1;">
+                <a href="{% url 'profile' u.username %}" style="font-weight:600; color:var(--text); text-decoration:none;">
+                    {{ u.profile.name }}
+                </a>
+                <div class="muted" style="font-size:12px;">@{{ u.username }}</div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if groups %}
+<div class="card">
+    <h3 style="font-size:16px;">👥 {% trans "المجموعات" %}</h3>
+    {% for g in groups %}
+        <div style="padding:10px 0; border-bottom:1px solid var(--border-light);">
+            <a href="{% url 'group_detail' g.slug %}" style="font-weight:600; color:var(--accent); text-decoration:none;">
+                {{ g.name }}
+            </a>
+            <div class="muted" style="font-size:12px;">{{ g.members_count }} {% trans "عضو" %}</div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if pages %}
+<div class="card">
+    <h3 style="font-size:16px;">📄 {% trans "الصفحات" %}</h3>
+    {% for p in pages %}
+        <div style="padding:10px 0; border-bottom:1px solid var(--border-light);">
+            <a href="{% url 'page_detail' p.slug %}" style="font-weight:600; color:var(--accent); text-decoration:none;">
+                {{ p.name }}
+            </a>
+            <div class="muted" style="font-size:12px;">{{ p.get_category_display }} · {{ p.followers_count }} {% trans "متابع" %}</div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if posts %}
+<div class="card">
+    <h3 style="font-size:16px;">📝 {% trans "المنشورات" %}</h3>
+    {% for p in posts %}
+        <div class="comment">
+            <strong><a href="{% url 'profile' p.author.username %}" style="color:var(--accent); text-decoration:none;">{{ p.author.profile.name }}</a></strong>
+            <div>{{ p.content|truncatechars:150 }}</div>
+            <div><a href="{% url 'post_detail' p.pk %}">{% trans "فتح" %}</a></div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if not users and not posts and not groups and not pages %}
+<div class="card" style="text-align:center;">{% trans "لا نتائج." %}</div>
+{% endif %}
+
+{% endblock %}

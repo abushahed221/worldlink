@@ -1,0 +1,75 @@
+{% load i18n %}
+<article class="card">
+    <div class="post-header">
+        <a href="{% url 'profile' post.author.username %}">
+            <div class="avatar">
+                {% if post.author.profile.avatar %}<img src="{{ post.author.profile.avatar.url }}" alt="">{% else %}{{ post.author.profile.initials }}{% endif %}
+            </div>
+        </a>
+        <div style="flex:1; min-width:0;">
+            <a href="{% url 'profile' post.author.username %}" class="post-username">
+                {{ post.author.profile.name }}
+            </a>
+            <div class="muted">{{ post.created_at|date:"Y-m-d H:i" }}</div>
+        </div>
+        <details style="position:relative;">
+            <summary style="padding:6px 12px; border-radius:50%; font-size:20px; color:var(--text-muted);"
+                     onmouseover="this.style.background='var(--hover-bg)'"
+                     onmouseout="this.style.background='transparent'">⋯</summary>
+            <div class="dropdown-menu">
+                {% if user == post.author %}
+                    <a href="{% url 'edit_post' post.pk %}">✏️ {% trans "تعديل المنشور" %}</a>
+                    <a href="{% url 'delete_post' post.pk %}" class="danger" onclick="return confirm('{% trans "حذف المنشور؟" %}');">🗑️ {% trans "حذف المنشور" %}</a>
+                {% else %}
+                    <a href="{% url 'hide_post' post.pk %}">🙈 {% trans "إخفاء هذا المنشور" %}</a>
+                    <a href="{% url 'hide_all_from_user' post.author.username %}">🚫 {% trans "إخفاء كل منشورات" %} {{ post.author.profile.short_name }}</a>
+                    <a href="{% url 'mute_user' post.author.username %}">🔇 {% trans "كتم" %} {{ post.author.profile.short_name }}</a>
+                    <a href="{% url 'block_user' post.author.username %}" class="danger" onclick="return confirm('{% trans "حظر" %} {{ post.author.profile.short_name }}؟');">⛔ {% trans "حظر" %} {{ post.author.profile.short_name }}</a>
+                    <a href="{% url 'report_post' post.pk %}" class="danger">⚠️ {% trans "إبلاغ" %}</a>
+                {% endif %}
+            </div>
+        </details>
+    </div>
+
+    {% if post.repost_of %}
+        {% if post.content %}<div class="post-content">{{ post.content }}</div>{% endif %}
+        <div class="comment" style="border:1px solid var(--border);">
+            <div class="comment-header">
+                <div class="avatar avatar-sm">
+                    {% if post.repost_of.author.profile.avatar %}<img src="{{ post.repost_of.author.profile.avatar.url }}" alt="">{% else %}{{ post.repost_of.author.profile.initials }}{% endif %}
+                </div>
+                <div>
+                    <a href="{% url 'profile' post.repost_of.author.username %}">{{ post.repost_of.author.profile.name }}</a>
+                    <span class="muted">· {{ post.repost_of.created_at|date:"Y-m-d" }}</span>
+                </div>
+            </div>
+            <div class="post-content" style="margin:6px 0 0;">{{ post.repost_of.content }}</div>
+            {% include "posts/_media.html" with p=post.repost_of %}
+        </div>
+    {% else %}
+        {% if post.content %}<div class="post-content">{{ post.content }}</div>{% endif %}
+        {% include "posts/_media.html" with p=post %}
+    {% endif %}
+
+    <div class="post-actions">
+        <a href="{% url 'toggle_like' post.pk %}" class="action-btn {% if user in post.likes.all %}liked{% endif %}">
+            {% if user in post.likes.all %}❤️{% else %}🤍{% endif %} {% trans "إعجاب" %} ({{ post.total_likes }})
+        </a>
+        <a href="{% url 'post_detail' post.pk %}#comments" class="action-btn">
+            💬 {% trans "تعليق" %} ({{ post.total_comments }})
+        </a>
+        <a href="{% url 'repost' post.pk %}" class="action-btn">
+            🔁 {% trans "مشاركة" %} ({{ post.total_reposts }})
+        </a>
+        <a href="{% url 'quote_post' post.pk %}" class="action-btn">✍️ {% trans "اقتباس" %}</a>
+        <a href="#" onclick="sharePost({{ post.pk }}, '{{ post.content|truncatechars:60|escapejs }}'); return false;" class="action-btn">📤 {% trans "مشاركة خارجية" %}</a>
+        <a href="{% url 'toggle_bookmark' post.pk %}" class="action-btn">📑 {% trans "حفظ" %}</a>
+    </div>
+
+    {% if user == post.author %}
+    <div class="post-author-actions">
+        <a href="{% url 'edit_post' post.pk %}" class="btn btn-secondary btn-sm">✏️ {% trans "تعديل" %}</a>
+        <a href="{% url 'delete_post' post.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('{% trans "حذف المنشور؟" %}');">🗑️ {% trans "حذف" %}</a>
+    </div>
+    {% endif %}
+</article>

@@ -1,0 +1,413 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "محادثة مع" %} {{ other.profile.name }} | WorldLink{% endblock %}
+<div class="card" style="display:flex; align-items:center; gap:12px; padding:10px 14px;">
+    <a href="{% url 'chat_list' %}" style="text-decoration:none; color:#65676b; font-size:22px;">→</a>
+    <a href="{% url 'profile' other.username %}" style="text-decoration:none;">
+        <div class="avatar avatar-sm">
+                       {% if other.profile.avatar %}<img src="{{ other.profile.avatar.url }}" alt="">{% else %}{{ other.profile.initials }}{% endif %}
+        </div>
+    </a>
+    <div style="flex:1; min-width:0;">        <a href="{% url 'profile' other.username %}" style="font-weight:700; color:var(--text); text-decoration:none;">
+            {{ other.profile.name }}
+        </a>
+        <div class="muted" style="font-size:12px;" id="status-line">
+            {% if conversation.is_secret %}🔒 محادثة سرية{% else %}محادثة خاصة{% endif %}
+            {% if conversation.disappear_after %} · ⏱️ تختفي الرسائل{% endif %}
+        </div>
+    </div>
+    <details style="position:relative;">
+        <summary style="padding:6px 12px; border-radius:50%; font-size:20px; color:#65676b; cursor:pointer;">⋯</summary>
+        <div class="dropdown-menu" style="min-width:220px;">
+            <form method="post" action="{% url 'set_conversation_mode' conversation.pk %}" style="padding:0;">
+                {% csrf_token %}
+                <input type="hidden" name="mode" value="{% if conversation.is_secret %}normal{% else %}secret{% endif %}">
+                <button type="submit" style="width:100%; text-align:right; padding:10px 14px; background:none; border:0; cursor:pointer; color:#1c1e21; font-size:14px; border-radius:8px;"
+                        onmouseover="this.style.background='#f0f2f5'" onmouseout="this.style.background='none'">
+                    {% if conversation.is_secret %}🔓 إلغاء الوضع السري{% else %}🔒 تحويل لمحادثة سرية{% endif %}
+                </button>
+            </form>
+            <div style="padding:10px 14px; border-top:1px solid #f0f2f5;">
+                <div class="muted" style="font-size:12px; margin-bottom:6px;">⏱️ اختفاء الرسائل</div>
+                <form method="post" action="{% url 'set_disappear' conversation.pk %}">
+                    {% csrf_token %}
+                    <select name="seconds" onchange="this.form.submit()"
+                            style="width:100%; padding:6px; border-radius:6px; border:1px solid #e4e6eb; font-size:13px;">
+                        <option value="0" {% if conversation.disappear_after == 0 %}selected{% endif %}>بدون اختفاء</option>
+                        <option value="300" {% if conversation.disappear_after == 300 %}selected{% endif %}>5 دقائق</option>
+                        <option value="3600" {% if conversation.disappear_after == 3600 %}selected{% endif %}>ساعة</option>
+                        <option value="86400" {% if conversation.disappear_after == 86400 %}selected{% endif %}>يوم</option>
+                        <option value="604800" {% if conversation.disappear_after == 604800 %}selected{% endif %}>أسبوع</option>
+                    </select>
+                </form>
+            </div>
+            <a href="{% url 'delete_conversation' conversation.pk %}"
+               onclick="return confirm('حذف المحادثة بالكامل؟');"
+               class="danger" style="display:block; padding:10px 14px; color:#d63031; text-decoration:none; border-radius:8px;">
+                🗑️ حذف المحادثة
+            </a>
+        </div>
+    </details>
+</div>
+
+<div id="chat-box" class="card"
+     style="height:520px; overflow-y:auto; display:flex; flex-direction:column; padding:16px; gap:8px; background:#ffffff;"
+     data-conversation-id="{{ conversation.pk }}"
+     data-current-user="{{ user.username }}"
+     data-current-user-id="{{ user.id }}"
+     data-is-secret="{% if conversation.is_secret %}1{% else %}0{% endif %}">
+    {% for item in messages_list %}
+    <div class="chat-msg {% if item.obj.sender == user %}mine{% else %}theirs{% endif %}"
+         data-msg-id="{{ item.obj.id }}"
+         data-msg-type="{{ item.obj.message_type }}">
+        <div class="chat-bubble">
+            {% if item.obj.reply_to %}
+            <div style="border-right:3px solid rgba(255,255,255,0.6); padding:2px 8px 2px 0; margin-bottom:6px; font-size:12px; opacity:0.85;">
+                <strong>{{ item.obj.reply_to.sender.username }}:</strong> {{ item.reply_text|truncatechars:60 }}
+            </div>
+            {% endif %}
+            {% if item.obj.message_type == "image" %}
+                <img src="{{ item.obj.file.url }}" alt="صورة" style="max-width:220px; border-radius:10px; cursor:pointer;" onclick="window.open(this.src)">
+            {% elif item.obj.message_type == "video" %}
+                <video controls style="max-width:260px; border-radius:10px;"><source src="{{ item.obj.file.url }}"></video>
+            {% elif item.obj.message_type == "audio" or item.obj.message_type == "voice" %}
+                <audio controls style="max-width:240px;"><source src="{{ item.obj.file.url }}"></audio>
+            {% elif item.obj.message_type == "file" %}
+                <a href="{{ item.obj.file.url }}" target="_blank" style="color:inherit; text-decoration:underline;">📎 {{ item.obj.file_name }}</a>
+            {% endif %}
+            <div class="msg-text">{% if item.text %}{{ item.text|linebreaksbr }}{% endif %}</div>
+            <div class="edited-tag" style="display:{% if item.obj.was_edited %}block{% else %}none{% endif %}; font-size:11px; opacity:0.7; margin-top:4px;">
+                (عُدّلت{% if item.obj.edited_at %} · {{ item.obj.edited_at|date:"H:i" }}{% endif %})
+            </div>
+        </div>
+        <div class="chat-time">
+            {{ item.obj.created_at|date:"H:i" }}
+            {% if item.obj.sender == user and item.obj.message_type == "text" %}
+                · <a href="#" onclick="editMsg({{ item.obj.id }}); return false;" style="color:#90949c; text-decoration:none;">تعديل</a>
+                · <a href="#" onclick="deleteMsg({{ item.obj.id }}); return false;" style="color:#90949c; text-decoration:none;">حذف</a>
+            {% elif item.obj.sender == user %}
+                · <a href="#" onclick="deleteMsg({{ item.obj.id }}); return false;" style="color:#90949c; text-decoration:none;">حذف</a>
+            {% endif %}
+            {% if item.obj.sender != user %} · <a href="{% url 'report_message' item.obj.pk %}" style="color:#90949c; text-decoration:none;">إبلاغ</a>{% endif %}
+            <a href="#" onclick="setReply({{ item.obj.id }}, '{{ item.text|truncatechars:40|escapejs }}', '{{ item.obj.sender.username }}'); return false;" style="color:#90949c; text-decoration:none;">رد</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="typing-indicator" style="height:18px; padding:0 4px; font-size:12px; color:#65676b; visibility:hidden;">
+    يكتب...
+</div>
+
+<div id="reply-preview" style="display:none; background:#e7f3ff; padding:8px 12px; border-radius:10px; margin-bottom:6px; justify-content:space-between; align-items:center; font-size:13px;">
+    <span id="reply-preview-text" style="color:#1769aa;"></span>
+    <button type="button" onclick="clearReply()" style="background:none; border:0; cursor:pointer; font-size:16px; color:#65676b;">×</button>
+</div>
+
+<div id="edit-preview" style="display:none; background:#fff3cd; padding:8px 12px; border-radius:10px; margin-bottom:6px; justify-content:space-between; align-items:center; font-size:13px;">
+    <span style="color:#856404;">✏️ جارٍ تعديل رسالة...</span>
+    <button type="button" onclick="cancelEdit()" style="background:none; border:0; cursor:pointer; font-size:16px; color:#856404;">×</button>
+</div>
+
+<form id="chat-form" class="card" style="display:flex; gap:8px; padding:8px; align-items:flex-end; flex-wrap:wrap;">
+    {% csrf_token %}
+    <label class="attach-btn" title="صورة">
+        📷
+        <input type="file" id="file-image" accept="image/*">
+    </label>
+    <label class="attach-btn" title="فيديو">
+        🎬
+        <input type="file" id="file-video" accept="video/*">
+    </label>
+    <label class="attach-btn" title="ملف صوتي">
+        🎵
+        <input type="file" id="file-audio" accept="audio/*">
+    </label>
+    <label class="attach-btn" title="ملف">
+        📎
+        <input type="file" id="file-any">
+    </label>
+    <button type="button" class="attach-btn" id="btn-voice" title="تسجيل صوتي">🎤</button>
+    <textarea id="chat-input" rows="1" placeholder="اكتب رسالة..."
+              style="flex:1; min-width:140px; margin:0; min-height:42px; max-height:120px; resize:none;"></textarea>
+    <button type="submit" class="btn" id="send-btn">إرسال</button>
+</form>
+
+<style>
+    .chat-msg { display: flex; flex-direction: column; max-width: 78%; }
+    .chat-msg.mine { align-self: flex-end; align-items: flex-end; }
+    .chat-msg.theirs { align-self: flex-start; align-items: flex-start; }
+    .chat-bubble { padding: 10px 14px; border-radius: 16px; word-wrap: break-word; line-height: 1.5; font-size: 14px; }
+    .chat-msg.mine .chat-bubble { background: #1769aa; color: white; border-bottom-right-radius: 4px; }
+    .chat-msg.theirs .chat-bubble { background: #e4e6eb; color: #1c1e21; border-bottom-left-radius: 4px; }
+    .chat-time { font-size: 11px; color: #90949c; margin-top: 2px; padding: 0 4px; }
+    .chat-time a { color: #90949c; }
+    #btn-voice.recording { background: #d63031 !important; color: white !important; border-color: #d63031 !important; animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.55; } }
+</style>
+
+<script>
+(function() {
+    const box = document.getElementById("chat-box");
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("chat-input");
+    const sendBtn = document.getElementById("send-btn");
+    const convId = box.dataset.conversationId;
+    const currentUserId = parseInt(box.dataset.currentUserId);
+
+    box.scrollTop = box.scrollHeight;
+
+    let replyToId = null;
+    let editingMessageId = null;
+
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const ws = new WebSocket(protocol + "://" + window.location.host + "/ws/chat/" + convId + "/");
+
+    ws.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.type === "typing") {
+            const el = document.getElementById("typing-indicator");
+            el.textContent = data.sender + " يكتب...";
+            el.style.visibility = data.is_typing ? "visible" : "hidden";
+            return;
+        }
+        if (data.type === "delete") {
+            const el = document.querySelector(`[data-msg-id="${data.message_id}"]`);
+            if (el) el.remove();
+            return;
+        }
+        if (data.type === "edit") {
+            const el = document.querySelector(`[data-msg-id="${data.message_id}"]`);
+            if (el) {
+                const txt = el.querySelector(".msg-text");
+                if (txt) txt.textContent = data.content;
+                const tag = el.querySelector(".edited-tag");
+                if (tag) {
+                    tag.textContent = "(عُدّلت · " + data.edited_at + ")";
+                    tag.style.display = "block";
+                }
+            }
+            return;
+        }
+        if (data.type === "read") return;
+
+        appendMessage(data);
+        playNotify();
+    };
+
+    ws.onopen = function() {
+        ws.send(JSON.stringify({ action: "read" }));
+    };
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        if (editingMessageId) {
+            ws.send(JSON.stringify({
+                action: "edit",
+                message_id: editingMessageId,
+                content: text,
+            }));
+            cancelEdit();
+        } else {
+            ws.send(JSON.stringify({
+                action: "message",
+                message: text,
+                reply_to: replyToId,
+            }));
+            clearReply();
+        }
+        input.value = "";
+        input.style.height = "42px";
+    });
+
+    input.addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            form.dispatchEvent(new Event("submit"));
+        }
+        if (e.key === "Escape" && editingMessageId) {
+            cancelEdit();
+        }
+    });
+
+    let typingTimer = null;
+    input.addEventListener("input", function() {
+        input.style.height = "42px";
+        input.style.height = Math.min(input.scrollHeight, 120) + "px";
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ action: "typing", is_typing: true }));
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(function() {
+                ws.send(JSON.stringify({ action: "typing", is_typing: false }));
+            }, 1500);
+        }
+    });
+
+    async function uploadFile(file) {
+        const fd = new FormData();
+        fd.append("file", file);
+        fd.append("csrfmiddlewaretoken", document.querySelector("[name=csrfmiddlewaretoken]").value);
+        const url = "/chat/" + convId + "/upload/";
+        const res = await fetch(url, { method: "POST", body: fd });
+        const data = await res.json();
+        if (!data.ok) { alert(data.error || "فشل رفع الملف"); return; }
+        ws.send(JSON.stringify({
+            action: "media",
+            message_type: data.message_type,
+            file_url: data.file_url,
+            reply_to: replyToId,
+        }));
+        clearReply();
+    }
+
+    document.getElementById("file-image").addEventListener("change", function(e) {
+        if (e.target.files[0]) uploadFile(e.target.files[0]);
+        e.target.value = "";
+    });
+    document.getElementById("file-video").addEventListener("change", function(e) {
+        if (e.target.files[0]) uploadFile(e.target.files[0]);
+        e.target.value = "";
+    });
+    document.getElementById("file-audio").addEventListener("change", function(e) {
+        if (e.target.files[0]) uploadFile(e.target.files[0]);
+        e.target.value = "";
+    });
+    document.getElementById("file-any").addEventListener("change", function(e) {
+        if (e.target.files[0]) uploadFile(e.target.files[0]);
+        e.target.value = "";
+    });
+
+    const btnVoice = document.getElementById("btn-voice");
+    let mediaRecorder = null;
+    let chunks = [];
+
+    btnVoice.addEventListener("click", async function() {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+            return;
+        }
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            chunks = [];
+            mediaRecorder.ondataavailable = function(e) { chunks.push(e.data); };
+            mediaRecorder.onstop = function() {
+                const blob = new Blob(chunks, { type: "audio/webm" });
+                const file = new File([blob], "voice-" + Date.now() + ".webm", { type: "audio/webm" });
+                uploadFile(file);
+                btnVoice.classList.remove("recording");
+                btnVoice.textContent = "🎤";
+                stream.getTracks().forEach(t => t.stop());
+            };
+            mediaRecorder.start();
+            btnVoice.classList.add("recording");
+            btnVoice.textContent = "⏹️";
+        } catch (err) {
+            alert("لا يمكن الوصول للميكروفون.");
+        }
+    });
+
+    window.setReply = function(id, text, sender) {
+        if (editingMessageId) cancelEdit();
+        replyToId = id;
+        const rp = document.getElementById("reply-preview");
+        document.getElementById("reply-preview-text").textContent = "رد على " + sender + ": " + text;
+        rp.style.display = "flex";
+        input.focus();
+    };
+
+    window.clearReply = function() {
+        replyToId = null;
+        document.getElementById("reply-preview").style.display = "none";
+    };
+
+    window.editMsg = function(id) {
+        const el = document.querySelector(`[data-msg-id="${id}"]`);
+        if (!el) return;
+        const txt = el.querySelector(".msg-text");
+        if (!txt) return;
+        clearReply();
+        editingMessageId = id;
+        input.value = txt.textContent.trim();
+        input.focus();
+        input.style.height = "42px";
+        input.style.height = Math.min(input.scrollHeight, 120) + "px";
+        document.getElementById("edit-preview").style.display = "flex";
+        sendBtn.textContent = "حفظ التعديل";
+    };
+
+    window.cancelEdit = function() {
+        editingMessageId = null;
+        input.value = "";
+        input.style.height = "42px";
+        document.getElementById("edit-preview").style.display = "none";
+        sendBtn.textContent = "إرسال";
+    };
+
+    window.deleteMsg = function(id) {
+        if (!confirm("حذف الرسالة؟")) return;
+        if (editingMessageId === id) cancelEdit();
+        ws.send(JSON.stringify({ action: "delete", message_id: id }));
+    };
+
+    function appendMessage(data) {
+        const isMine = data.sender_id === currentUserId;
+        const wrap = document.createElement("div");
+        wrap.className = "chat-msg " + (isMine ? "mine" : "theirs");
+        wrap.dataset.msgId = data.message_id;
+        wrap.dataset.msgType = data.message_type;
+
+        let inner = "";
+        if (data.reply_to) {
+            inner += `<div style="border-right:3px solid rgba(255,255,255,0.6); padding:2px 8px 2px 0; margin-bottom:6px; font-size:12px; opacity:0.85;">
+                <strong>${data.reply_to.sender}:</strong> ${escapeHtml(data.reply_to.content)}
+            </div>`;
+        }
+        if (data.message_type === "image") {
+            inner += `<img src="${data.file_url}" style="max-width:220px; border-radius:10px; cursor:pointer;" onclick="window.open(this.src)">`;
+        } else if (data.message_type === "video") {
+            inner += `<video controls style="max-width:260px; border-radius:10px;"><source src="${data.file_url}"></video>`;
+        } else if (data.message_type === "audio" || data.message_type === "voice") {
+            inner += `<audio controls style="max-width:240px;"><source src="${data.file_url}"></audio>`;
+        } else if (data.message_type === "file") {
+            inner += `<a href="${data.file_url}" target="_blank" style="color:inherit; text-decoration:underline;">📎 ${data.file_name}</a>`;
+        }
+        inner += `<div class="msg-text">${escapeHtml(data.content || "").replace(/\n/g, "<br>")}</div>`;
+        inner += `<div class="edited-tag" style="display:${data.edited_at ? "block" : "none"}; font-size:11px; opacity:0.7; margin-top:4px;">${data.edited_at ? "(عُدّلت · " + data.edited_at + ")" : ""}</div>`;
+
+        const bubble = document.createElement("div");
+        bubble.className = "chat-bubble";
+        bubble.innerHTML = inner;
+
+        const time = document.createElement("div");
+        time.className = "chat-time";
+        time.textContent = data.created_at;
+
+        wrap.appendChild(bubble);
+        wrap.appendChild(time);
+        box.appendChild(wrap);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function escapeHtml(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function playNotify() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.connect(g); g.connect(ctx.destination);
+            o.frequency.value = 780;
+            g.gain.value = 0.06;
+            o.start();
+            setTimeout(() => { o.stop(); ctx.close(); }, 140);
+        } catch (e) {}
+    }
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "posts/settings/_base.html" %}
+{% load i18n %}
+{% block settings_content %}
+
+<div class="card" style="border:2px solid var(--danger);">
+    <h3 style="margin-top:0; font-size:18px; color:var(--danger);">⚠️ {% trans "حذف الحساب نهائيًا" %}</h3>
+    <p class="muted" style="font-size:14px; line-height:1.7;">
+        {% trans "سيتم حذف كل شيء:" %}
+    </p>
+    <ul style="color:var(--danger); font-size:13px; line-height:2; padding-right:20px;">
+        <li>{% trans "منشوراتك وتعليقاتك" %}</li>
+        <li>{% trans "محادثاتك ورسائلك" %}</li>
+        <li>{% trans "أصدقاؤك ومتابعاتك" %}</li>
+        <li>{% trans "مجموعاتك وصفحاتك" %}</li>
+        <li>{% trans "كل شيء — بشكل نهائي" %}</li>
+    </ul>
+    <p class="muted" style="font-size:13px; margin-top:14px;">
+        {% trans "لا يمكن التراجع عن هذا الإجراء." %}
+    </p>
+
+    <form method="post" style="margin-top:20px;">
+        {% csrf_token %}
+        {% for field in form %}
+        <div style="margin-bottom:12px;">
+            <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px; color:var(--danger);">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div style="color:var(--danger); font-size:13px; margin-top:4px;">{{ field.errors.0 }}</div>{% endif %}
+        </div>
+        {% endfor %}
+        <div style="display:flex; gap:8px; margin-top:16px;">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('{% trans "تأكيد نهائي: حذف حسابك؟" %}');">🗑️ {% trans "احذف حسابي نهائيًا" %}</button>
+            <a href="{% url 'settings_index' %}" class="btn btn-secondary">{% trans "إلغاء" %}</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

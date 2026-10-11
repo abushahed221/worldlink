@@ -1,0 +1,44 @@
+{% extends "posts/base.html" %}
+{% block title %}أكواد احتياطية | WorldLink{% endblock %}
+{% block content %}
+<div class="card" style="max-width:560px; margin:30px auto;">
+    <div style="text-align:center; margin-bottom:16px;">
+        <div style="font-size:52px;">✅</div>
+        <h2 style="font-size:20px; margin:10px 0 6px;">تم تفعيل 2FA بنجاح</h2>
+        <p class="muted">احفظ هذه الأكواد في مكان آمن الآن. لن تظهر مرة أخرى!</p>
+    </div>
+
+    <div style="background:var(--warn-bg); color:var(--warn-text); padding:14px; border-radius:10px; margin-bottom:16px; font-size:13px; line-height:1.6;">
+        ⚠️ <strong>مهم جدًا:</strong> هذه الأكواد تُستخدم للدخول لو فقدت هاتفك. اطبعها أو احفظها في مكان آمن. كل كود يُستخدم مرة واحدة فقط.
+    </div>
+
+    <div style="background:var(--input-bg); padding:18px; border-radius:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;">
+        {% for code in codes %}
+            <div style="font-family:monospace; font-size:16px; letter-spacing:2px; text-align:center; padding:10px; background:var(--card-bg); border-radius:8px; user-select:all;">
+                {{ code }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn" onclick="copyCodes()" style="flex:1; justify-content:center;">📋 نسخ الأكواد</button>
+        <button type="button" class="btn btn-secondary" onclick="window.print();">🖨️ طباعة</button>
+        <a href="{% url 'security_settings' %}" class="btn btn-secondary">متابعة</a>
+    </div>
+</div>
+
+<script>
+function copyCodes() {
+    const codes = [];
+    document.querySelectorAll(".card div[style*='monospace']").forEach(function(el) {
+        const t = el.textContent.trim();
+        if (t && t.length === 8) codes.push(t);
+    });
+    navigator.clipboard.writeText(codes.join("\n")).then(function() {
+        alert("تم نسخ الأكواد. احفظها في مكان آمن الآن!");
+    }).catch(function() {
+        prompt("انسخ الأكواد يدويًا:", codes.join("\n"));
+    });
+}
+</script>
+{% endblock %}

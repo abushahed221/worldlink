@@ -1,0 +1,61 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "تصدير بياناتي" %} | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <a href="{% url 'settings_account' %}" style="text-decoration:none; color:var(--text-muted); font-size:22px;">→</a>
+        <h2 style="margin:0; font-size:20px;">📦 {% trans "تصدير بياناتي" %}</h2>
+    </div>
+    <p class="muted" style="font-size:14px; line-height:1.7;">
+        {% trans "حمّل نسخة كاملة من كل بياناتك على WorldLink في ملف JSON. يشمل:" %}
+    </p>
+    <ul class="muted" style="font-size:13px; line-height:1.9; padding-right:20px; margin-top:10px;">
+        <li>{% trans "معلومات حسابك وملفك الشخصي" %}</li>
+        <li>{% trans "منشوراتك وتعليقاتك وإعجاباتك" %}</li>
+        <li>{% trans "رسائلك ومحادثاتك" %}</li>
+        <li>{% trans "قوائم أصدقائك ومتابعاتك" %}</li>
+        <li>{% trans "مجموعاتك وصفحاتك" %}</li>
+        <li>{% trans "سجل الجلسات ومحاولات الدخول" %}</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h3 style="font-size:16px; margin:0 0 12px;">📊 {% trans "ملخص بياناتك" %}</h3>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:10px;">
+        <div style="padding:14px; background:var(--input-bg); border-radius:10px; text-align:center;">
+            <div style="font-size:24px; font-weight:800; color:var(--accent);">{{ stats.posts }}</div>
+            <div class="muted" style="font-size:12px;">{% trans "منشور" %}</div>
+        </div>
+        <div style="padding:14px; background:var(--input-bg); border-radius:10px; text-align:center;">
+            <div style="font-size:24px; font-weight:800; color:var(--accent);">{{ stats.comments }}</div>
+            <div class="muted" style="font-size:12px;">{% trans "تعليق" %}</div>
+        </div>
+        <div style="padding:14px; background:var(--input-bg); border-radius:10px; text-align:center;">
+            <div style="font-size:24px; font-weight:800; color:var(--accent);">{{ stats.messages }}</div>
+            <div class="muted" style="font-size:12px;">{% trans "رسالة" %}</div>
+        </div>
+        <div style="padding:14px; background:var(--input-bg); border-radius:10px; text-align:center;">
+            <div style="font-size:24px; font-weight:800; color:var(--accent);">{{ stats.group_posts }}</div>
+            <div class="muted" style="font-size:12px;">{% trans "منشورات مجموعات" %}</div>
+        </div>
+        <div style="padding:14px; background:var(--input-bg); border-radius:10px; text-align:center;">
+            <div style="font-size:24px; font-weight:800; color:var(--accent);">{{ stats.page_posts }}</div>
+            <div class="muted" style="font-size:12px;">{% trans "منشورات صفحات" %}</div>
+        </div>
+    </div>
+
+    <a href="{% url 'data_export' %}" class="btn" style="margin-top:16px;">
+        ⬇️ {% trans "تنزيل نسخة JSON كاملة" %}
+    </a>
+</div>
+
+<div class="card" style="background:var(--warn-bg); color:var(--warn-text);">
+    <strong style="font-size:14px;">⚠️ {% trans "تنبيه الخصوصية" %}</strong>
+    <p style="font-size:13px; line-height:1.6; margin-top:6px;">
+        {% trans "الملف يحتوي على كل بياناتك. احفظه في مكان آمن ولا تشاركه مع أحد." %}
+    </p>
+</div>
+
+{% endblock %}

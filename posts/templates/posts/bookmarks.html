@@ -1,0 +1,12 @@
+{% extends "posts/base.html" %}
+{% block title %}المحفوظات | WorldLink{% endblock %}
+{% block content %}
+<h2 style="font-size:20px; margin:0 0 14px 4px;">🔖 المنشورات المحفوظة</h2>
+
+{% for post in posts %}
+    {% include "posts/_post_card.html" with post=post %}
+{% empty %}
+<div class="card">لا توجد محفوظات بعد.</div>
+{% endfor %}
+
+{% endblock %}

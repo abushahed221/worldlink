@@ -1,0 +1,13 @@
+{% extends "posts/base.html" %}
+{% block title %}إنشاء حساب | WorldLink{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>انضم إلى WorldLink</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">إنشاء الحساب</button>
+    </form>
+    <p class="muted">لديك حساب؟ <a href="{% url 'login' %}">سجّل الدخول</a></p>
+</div>
+{% endblock %}

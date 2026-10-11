@@ -1,0 +1,38 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "الإعدادات" %} | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card" style="padding:0; overflow:hidden;">
+    <div style="background:linear-gradient(135deg, var(--accent), #4a90d9); padding:22px; color:white;">
+        <h1 style="font-size:22px; margin:0;">⚙️ {% trans "الإعدادات" %}</h1>
+        <p style="margin:6px 0 0; opacity:0.9; font-size:14px;">{% trans "إدارة حسابك وخصوصيتك" %}</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:0;">
+        <a href="{% url 'settings_index' %}" class="tab {% if request.resolver_match.url_name == 'settings_index' %}active{% endif %}">🏠 {% trans "نظرة عامة" %}</a>
+        <a href="{% url 'settings_profile' %}" class="tab {% if request.resolver_match.url_name == 'settings_profile' %}active{% endif %}">🖼️ {% trans "الملف الشخصي" %}</a>
+        <a href="{% url 'settings_personal' %}" class="tab {% if request.resolver_match.url_name == 'settings_personal' %}active{% endif %}">👤 {% trans "شخصي" %}</a>
+        <a href="{% url 'settings_work' %}" class="tab {% if request.resolver_match.url_name == 'settings_work' %}active{% endif %}">💼 {% trans "العمل" %}</a>
+        <a href="{% url 'settings_interests' %}" class="tab {% if request.resolver_match.url_name == 'settings_interests' %}active{% endif %}">❤️ {% trans "اهتمامات" %}</a>
+        <a href="{% url 'settings_privacy' %}" class="tab {% if request.resolver_match.url_name == 'settings_privacy' %}active{% endif %}">🔒 {% trans "الخصوصية" %}</a>
+        <a href="{% url 'settings_notifications' %}" class="tab {% if request.resolver_match.url_name == 'settings_notifications' %}active{% endif %}">🔔 {% trans "الإشعارات" %}</a>
+        <a href="{% url 'settings_appearance' %}" class="tab {% if request.resolver_match.url_name == 'settings_appearance' %}active{% endif %}">🎨 {% trans "المظهر" %}</a>
+        <a href="{% url 'settings_account' %}" class="tab {% if request.resolver_match.url_name == 'settings_account' %}active{% endif %}">📧 {% trans "الحساب" %}</a>
+    </div>
+</div>
+
+<style>
+    .tab {
+        padding: 14px; text-align: center; text-decoration: none;
+        color: var(--text-soft);
+        border-bottom: 3px solid transparent;
+        font-size: 14px;
+    }
+    .tab:hover { background: var(--hover-bg); color: var(--accent); }
+    .tab.active { border-bottom-color: var(--accent); color: var(--accent); font-weight: 700; }
+</style>
+
+{% block settings_content %}{% endblock %}
+
+{% endblock %}

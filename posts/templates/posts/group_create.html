@@ -1,0 +1,13 @@
+{% extends "posts/base.html" %}
+{% block title %}مجموعة جديدة | WorldLink{% endblock %}
+{% block content %}
+<div class="card">
+    <h2 style="font-size:20px; margin-bottom:14px;">➕ مجموعة جديدة</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">إنشاء</button>
+        <a href="{% url 'group_list' %}" class="btn btn-secondary">إلغاء</a>
+    </form>
+</div>
+{% endblock %}

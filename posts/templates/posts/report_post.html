@@ -1,0 +1,17 @@
+{% extends "posts/base.html" %}
+{% block title %}إبلاغ | WorldLink{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>🚩 إبلاغ عن منشور</h2>
+    <div class="comment">
+        <strong>{{ post.author.username }}</strong>
+        {{ post.content|truncatechars:200 }}
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-danger">إرسال الإبلاغ</button>
+        <a href="{% url 'post_detail' post.pk %}" class="btn btn-secondary">إلغاء</a>
+    </form>
+</div>
+{% endblock %}

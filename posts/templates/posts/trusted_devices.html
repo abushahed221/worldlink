@@ -1,0 +1,77 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "الأجهزة الموثوقة" %} | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <a href="{% url 'security_settings' %}" style="text-decoration:none; color:var(--text-muted); font-size:22px;">→</a>
+        <h2 style="margin:0; font-size:20px;">💻 {% trans "الأجهزة الموثوقة" %}</h2>
+    </div>
+    <p class="muted" style="font-size:13px; line-height:1.6;">
+        {% trans "هذه الأجهزة تخطت التحقق الثنائي ويمكنها الدخول دون طلب رمز لمدة 30 يومًا. إذا رأيت جهازًا لا تعرفه، احذفه فورًا وغيّر كلمة المرور." %}
+    </p>
+</div>
+
+{% if devices %}
+    {% for d in devices %}
+    <div class="card" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <div style="font-size:32px;">
+            {% if "Android" in d.obj.device_name or "iOS" in d.obj.device_name or "جوال" in d.obj.device_name %}📱{% else %}💻{% endif %}
+        </div>
+        <div style="flex:1; min-width:200px;">
+            <div style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                {{ d.obj.device_name|default:"جهاز" }}
+                {% if d.is_current %}
+                    <span class="badge badge-green">{% trans "هذا الجهاز" %}</span>
+                {% endif %}
+            </div>
+            <div class="muted" style="font-size:12px; margin-top:4px;">
+                📍 {{ d.obj.ip_address|default:"—" }}
+            </div>
+            <div class="muted" style="font-size:12px;">
+                {% trans "آخر استخدام" %}: {{ d.obj.last_used_at|date:"Y-m-d H:i" }}
+            </div>
+            <div class="muted" style="font-size:12px;">
+                {% trans "ينتهي في" %}: {{ d.obj.expires_at|date:"Y-m-d" }}
+            </div>
+        </div>
+        <form method="post" action="{% url 'trusted_device_remove' d.obj.pk %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm"
+                    onclick="return confirm('{% trans "حذف هذا الجهاز؟" %}');">
+                🗑️ {% trans "حذف" %}
+            </button>
+        </form>
+    </div>
+    {% endfor %}
+
+    {% if devices|length > 1 %}
+    <div class="card" style="text-align:center;">
+        <form method="post" action="{% url 'trusted_devices_remove_all' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('{% trans "حذف كل الأجهزة الموثوقة؟ سيُطلب منك 2FA في كل الأجهزة." %}');">
+                🗑️ {% trans "حذف كل الأجهزة" %}
+            </button>
+        </form>
+    </div>
+    {% endif %}
+{% else %}
+<div class="card" style="text-align:center; padding:40px 20px;">
+    <div style="font-size:52px;">💻</div>
+    <p class="muted" style="margin-top:12px;">{% trans "لا أجهزة موثوقة حاليًا." %}</p>
+    <p class="muted" style="font-size:13px;">
+        {% trans "عند تفعيل «تذكر هذا الجهاز» في 2FA، سيظهر هنا." %}
+    </p>
+</div>
+{% endif %}
+
+<div class="card" style="background:var(--warn-bg); color:var(--warn-text);">
+    <strong style="font-size:14px;">💡 {% trans "نصيحة أمنية" %}</strong>
+    <p style="font-size:13px; line-height:1.6; margin-top:6px;">
+        {% trans "راجع هذه الصفحة بانتظام. إذا رأيت جهازًا لا تعرفه، احذفه وغيّر كلمة المرور فورًا." %}
+    </p>
+</div>
+
+{% endblock %}

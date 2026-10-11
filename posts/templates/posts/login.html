@@ -1,0 +1,16 @@
+{% extends "posts/base.html" %}
+{% block title %}دخول | WorldLink{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>تسجيل الدخول</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">دخول</button>
+    </form>
+    <p class="muted">
+        <a href="{% url 'password_reset' %}">نسيت كلمة المرور؟</a> ·
+        ليس لديك حساب؟ <a href="{% url 'signup' %}">أنشئ حسابًا</a>
+    </p>
+</div>
+{% endblock %}

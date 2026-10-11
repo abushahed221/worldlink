@@ -1,0 +1,30 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "الأصدقاء" %} | WorldLink{% endblock %}
+{% block content %}
+<div class="card">
+    <h2 style="font-size:20px; margin:0;">👥 {% trans "أصدقائي" %} ({{ friends.count }})</h2>
+</div>
+
+{% for f in friends %}
+<div class="card" style="display:flex; align-items:center; gap:12px;">
+    <div class="avatar">
+        {% if f.profile.avatar %}<img src="{{ f.profile.avatar.url }}" alt="">{% else %}{{ f.profile.initials }}{% endif %}
+    </div>
+    <div style="flex:1; min-width:0;">
+        <a href="{% url 'profile' f.username %}" style="font-weight:700; color:var(--text); text-decoration:none; display:block;">
+            {{ f.profile.name }}
+        </a>
+        <div class="muted" style="font-size:12px;">@{{ f.username }}</div>
+    </div>
+    <a href="{% url 'start_chat' f.username %}" class="btn btn-sm">💬 {% trans "محادثة" %}</a>
+    <a href="{% url 'profile' f.username %}" class="btn btn-secondary btn-sm">{% trans "الملف" %}</a>
+</div>
+{% empty %}
+<div class="card" style="text-align:center; padding:40px 20px;">
+    <p class="muted">{% trans "لا أصدقاء بعد." %}</p>
+    <a href="{% url 'search' %}?q=" class="btn">{% trans "ابحث عن أشخاص" %}</a>
+</div>
+{% endfor %}
+
+{% endblock %}

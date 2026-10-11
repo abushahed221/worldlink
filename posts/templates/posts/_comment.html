@@ -1,0 +1,64 @@
+{% load i18n %}
+<div class="comment" id="comment-{{ comment.pk }}" style="scroll-margin-top: 80px;">
+    <div class="comment-header">
+        <div class="avatar avatar-sm">
+            {% if comment.author.profile.avatar %}<img src="{{ comment.author.profile.avatar.url }}" alt="">{% else %}{{ comment.author.profile.initials }}{% endif %}
+        </div>
+        <div>
+            <a href="{% url 'profile' comment.author.username %}">{{ comment.author.profile.name }}</a>
+            <span class="muted">· {{ comment.created_at|date:"Y-m-d H:i" }}</span>
+        </div>
+    </div>
+    <div class="comment-body">{{ comment.content|linebreaksbr }}</div>
+    <div class="comment-actions">
+        <a href="{% url 'comment_like' comment.pk %}" style="color:{% if user in comment.likes.all %}var(--like){% else %}var(--text-muted){% endif %};">
+            {% if user in comment.likes.all %}❤️{% else %}🤍{% endif %} {{ comment.total_likes }}
+        </a>
+        {% if user.is_authenticated %}
+            <a href="#" onclick="toggleReply({{ comment.pk }}); return false;">↩️ {% trans "رد" %}</a>
+        {% endif %}
+        {% if comment.replies_count %}
+            <span class="muted">({{ comment.replies_count }} {% trans "رد" %})</span>
+        {% endif %}
+        {% if user == comment.author %}
+            <a href="{% url 'comment_edit' comment.pk %}">✏️ {% trans "تعديل" %}</a>
+            <a href="{% url 'comment_delete' comment.pk %}" style="color:var(--danger);" onclick="return confirm('{% trans "حذف التعليق؟" %}');">🗑️</a>
+        {% endif %}
+    </div>
+
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'post_detail' comment.post.pk %}" id="reply-{{ comment.pk }}" style="display:none; margin-top:10px;">
+        {% csrf_token %}
+        <input type="hidden" name="parent_id" value="{{ comment.pk }}">
+        <textarea name="content" rows="2" placeholder="{% trans "اكتب ردًا على" %} {{ comment.author.profile.short_name }}..."></textarea>
+        <div style="display:flex; gap:6px; margin-top:6px;">
+            <button type="submit" class="btn btn-sm">{% trans "إرسال الرد" %}</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleReply({{ comment.pk }});">{% trans "إلغاء" %}</button>
+        </div>
+    </form>
+    {% endif %}
+
+    {% for reply in comment.replies_chrono %}
+        <div class="comment comment-reply" id="comment-{{ reply.pk }}" style="scroll-margin-top: 80px;">
+            <div class="comment-header">
+                <div class="avatar avatar-sm">
+                    {% if reply.author.profile.avatar %}<img src="{{ reply.author.profile.avatar.url }}" alt="">{% else %}{{ reply.author.profile.initials }}{% endif %}
+                </div>
+                <div>
+                    <a href="{% url 'profile' reply.author.username %}">{{ reply.author.profile.name }}</a>
+                    <span class="muted">· {{ reply.created_at|date:"Y-m-d H:i" }}</span>
+                </div>
+            </div>
+            <div class="comment-body">{{ reply.content|linebreaksbr }}</div>
+            <div class="comment-actions">
+                <a href="{% url 'comment_like' reply.pk %}" style="color:{% if user in reply.likes.all %}var(--like){% else %}var(--text-muted){% endif %};">
+                    {% if user in reply.likes.all %}❤️{% else %}🤍{% endif %} {{ reply.total_likes }}
+                </a>
+                {% if user == reply.author %}
+                    <a href="{% url 'comment_edit' reply.pk %}">✏️</a>
+                    <a href="{% url 'comment_delete' reply.pk %}" style="color:var(--danger);" onclick="return confirm('{% trans "حذف الرد؟" %}');">🗑️</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

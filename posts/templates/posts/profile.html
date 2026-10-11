@@ -1,0 +1,207 @@
+{% extends "posts/base.html" %}
+{% load i18n %}
+{% block title %}{{ profile.name }} | WorldLink{% endblock %}
+{% block content %}
+
+<div class="card" style="padding:0; overflow:hidden;">
+    <div style="height:180px; background:var(--group-cover);">
+        {% if profile.cover %}<img src="{{ profile.cover.url }}" style="width:100%; height:100%; object-fit:cover;">{% endif %}
+    </div>
+    <div style="padding:16px;">
+        <div style="display:flex; align-items:flex-end; gap:14px; margin-top:-50px; flex-wrap:wrap;">
+            <div class="avatar avatar-lg" style="border:4px solid var(--card-bg);">
+                {% if profile.avatar %}<img src="{{ profile.avatar.url }}">{% else %}{{ profile.initials }}{% endif %}
+            </div>
+            <div style="flex:1; padding-bottom:6px; min-width:200px;">
+                <h1 style="font-size:24px; margin:0;">{{ profile.name }}</h1>
+                {% if profile.display_name %}
+                <div class="muted" style="font-size:13px; margin-top:2px;">@{{ profile_user.username }}</div>
+                {% endif %}
+                <div class="muted" style="margin-top:4px; font-size:14px;">
+                    {% if profile.job_title %}💼 {{ profile.job_title }}{% endif %}
+                    {% if profile.location %} · 📍 {{ profile.location }}{% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if profile.bio %}
+        <p style="margin-top:14px; color:var(--text-soft); line-height:1.7;">{{ profile.bio }}</p>
+        {% endif %}
+
+        <div style="display:flex; gap:18px; margin-top:14px; flex-wrap:wrap; font-size:14px;">
+            <span><strong>{{ posts.count }}</strong> <span class="muted">{% trans "منشور" %}</span></span>
+            <span><strong>{{ followers_count }}</strong> <span class="muted">{% trans "متابع" %}</span></span>
+            <span><strong>{{ following_count }}</strong> <span class="muted">{% trans "يتابع" %}</span></span>
+            <span><strong>{{ friends_count }}</strong> <span class="muted">{% trans "صديق" %}</span></span>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+            {% if user == profile_user %}
+                <a href="{% url 'settings_profile' %}" class="btn btn-secondary btn-sm">✏️ {% trans "تعديل الملف" %}</a>
+                <a href="{% url 'settings_index' %}" class="btn btn-secondary btn-sm">⚙️ {% trans "الإعدادات" %}</a>
+            {% elif user.is_authenticated %}
+                {% if is_blocked %}
+                    <a href="{% url 'unblock_user' profile_user.username %}" class="btn btn-secondary btn-sm">{% trans "إلغاء الحظر" %}</a>
+                {% else %}
+                    <a href="{% url 'toggle_follow' profile_user.username %}" class="btn btn-sm {% if is_following %}btn-secondary{% endif %}">
+                        {% if is_following %}{% trans "إلغاء المتابعة" %}{% else %}➕ {% trans "متابعة" %}{% endif %}
+                    </a>
+                    {% if is_friend %}
+                        <a href="{% url 'remove_friend' profile_user.username %}" class="btn btn-secondary btn-sm" onclick="return confirm('{% trans "إزالة الصداقة؟" %}');">✔️ {% trans "إزالة الصداقة" %}</a>
+                    {% elif friend_status == 'pending' %}
+                        <span class="btn btn-secondary btn-sm" style="opacity:0.7;">⏳ {% trans "طلب معلّق" %}</span>
+                    {% else %}
+                        <a href="{% url 'send_friend_request' profile_user.username %}" class="btn btn-success btn-sm">🤝 {% trans "إضافة صديق" %}</a>
+                    {% endif %}
+                    <a href="{% url 'start_chat' profile_user.username %}" class="btn btn-sm">💬 {% trans "محادثة" %}</a>
+                    {% if is_muted %}
+                        <a href="{% url 'unmute_user' profile_user.username %}" class="btn btn-secondary btn-sm">🔊 {% trans "إلغاء الكتم" %}</a>
+                    {% else %}
+                        <a href="{% url 'mute_user' profile_user.username %}" class="btn btn-secondary btn-sm">🔇 {% trans "كتم" %}</a>
+                    {% endif %}
+                    <a href="{% url 'block_user' profile_user.username %}" class="btn btn-danger btn-sm" onclick="return confirm('{% trans "حظر" %} {{ profile_user.username }}؟');">⛔ {% trans "حظر" %}</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if profile.bio or profile.education or profile.job_title or profile.workplace or profile.interests_list or profile.languages_list or profile.website or profile.birthdate or profile.hometown or profile.relationship_status %}
+<div class="card">
+    <h3 style="margin-top:0; font-size:17px;">📋 {% trans "عن" %} {{ profile.name }}</h3>
+    <div style="display:grid; gap:12px;">
+
+        {% if profile.job_title or profile.workplace %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">💼</div>
+            <div>
+                <div style="font-weight:600;">{{ profile.job_title|default:"يعمل" }}</div>
+                {% if profile.workplace %}<div class="muted" style="font-size:13px;">{% trans "في" %} {{ profile.workplace }}</div>{% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.education %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">🎓</div>
+            <div>
+                <div style="font-weight:600;">{% trans "التعليم" %}</div>
+                <div class="muted" style="font-size:13px;">{{ profile.education }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.location %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">📍</div>
+            <div>
+                <div style="font-weight:600;">{% trans "يعيش في" %}</div>
+                <div class="muted" style="font-size:13px;">{{ profile.location }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.hometown %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">🏠</div>
+            <div>
+                <div style="font-weight:600;">{% trans "من" %}</div>
+                <div class="muted" style="font-size:13px;">{{ profile.hometown }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.birthdate and profile.show_birthdate %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">🎂</div>
+            <div>
+                <div style="font-weight:600;">{{ profile.birthdate_display }}</div>
+                {% if profile.age %}<div class="muted" style="font-size:13px;">{{ profile.age }} {% trans "سنة" %}</div>{% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.relationship_status and profile.show_relationship %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">💑</div>
+            <div>
+                <div style="font-weight:600;">{{ profile.get_relationship_status_display }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.languages_list %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">🌐</div>
+            <div>
+                <div style="font-weight:600;">{% trans "اللغات" %}</div>
+                <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">
+                    {% for lang in profile.languages_list %}<span class="badge">{{ lang }}</span>{% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.interests_list %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">❤️</div>
+            <div style="flex:1;">
+                <div style="font-weight:600;">{% trans "الاهتمامات" %}</div>
+                <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
+                    {% for i in profile.interests_list %}<span class="badge badge-blue">{{ i }}</span>{% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.website %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">🔗</div>
+            <div>
+                <div style="font-weight:600;">{% trans "الموقع" %}</div>
+                <a href="{{ profile.website }}" target="_blank" rel="noopener" style="font-size:13px;">{{ profile.website }}</a>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.phone and profile.show_phone %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">📱</div>
+            <div>
+                <div style="font-weight:600;">{% trans "الهاتف" %}</div>
+                <div class="muted" style="font-size:13px;">{{ profile.phone }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile_user.email and profile.show_email %}
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+            <div style="font-size:20px;">📧</div>
+            <div>
+                <div style="font-weight:600;">{% trans "البريد" %}</div>
+                <div class="muted" style="font-size:13px;">{{ profile_user.email }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endif %}
+
+{% if not is_blocked %}
+    {% if can_see %}
+        {% for post in posts %}
+            {% include "posts/_post_card.html" with post=post %}
+        {% empty %}
+        <div class="card" style="text-align:center;">{% trans "لا توجد منشورات." %}</div>
+        {% endfor %}
+    {% else %}
+        <div class="card" style="text-align:center; padding:40px 20px;">
+            <div style="font-size:44px;">🔒</div>
+            <h3 style="margin:10px 0 6px;">{% trans "المنشورات خاصة" %}</h3>
+            <p class="muted">{% trans "هذا المستخدم لا يشارك منشوراته مع الجميع." %}</p>
+        </div>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
