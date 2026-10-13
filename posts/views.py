@@ -365,19 +365,17 @@ def signup(request):
             user.email = form.cleaned_data["email"].lower()
             user.save()
             profile = user.profile
-            profile.is_verified = False
-            profile.verification_token = secrets.token_urlsafe(32)
+            profile.is_verified = True  # ✅ تفعيل تلقائي
             phone = form.cleaned_data.get("phone")
             if phone:
                 profile.phone = phone
             profile.save()
-            _send_verification_email(request, user, profile.verification_token)
-            messages.info(request, f"تم إنشاء حسابك. تحقق من بريدك {user.email}.")
-            return redirect("verify_email_sent")
+            login(request, user, backend="posts.backends.EmailOrPhoneBackend")
+            messages.success(request, f"مرحبًا بك {user.username}!")
+            return redirect("home")
     else:
         form = SignupForm()
     return render(request, "posts/signup.html", {"form": form})
-
 
 def verify_email_sent(request):
     return render(request, "posts/verify_email_sent.html")
