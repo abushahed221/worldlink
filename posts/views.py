@@ -365,7 +365,7 @@ def signup(request):
             user.email = form.cleaned_data["email"].lower()
             user.save()
             profile = user.profile
-            profile.is_verified = True  # ✅ تفعيل تلقائي
+            profile.is_verified = True
             phone = form.cleaned_data.get("phone")
             if phone:
                 profile.phone = phone
